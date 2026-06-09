@@ -159,6 +159,35 @@
   .walker-shadow{position:absolute; bottom:-8px; left:50%; transform:translateX(-50%); width:60%; height:14px; background:rgba(0,0,0,.22); border-radius:50%; filter:blur(2px); animation:shadowPulse .857s ease-in-out infinite;}
   @keyframes shadowPulse{0%,100%{transform:translateX(-50%) scale(1); opacity:.28;}50%{transform:translateX(-50%) scale(.7); opacity:.16;}}
 
+  /* boy shake on hit (separate layer so it won't fight the walk/centering transforms) */
+  .bob-shake{display:inline-block;}
+  .bob-shake.hurt{animation:hurtShake .36s ease;}
+  @keyframes hurtShake{0%,100%{transform:translateX(0) rotate(0);}20%{transform:translateX(-6px) rotate(-7deg);}40%{transform:translateX(6px) rotate(7deg);}60%{transform:translateX(-4px) rotate(-4deg);}80%{transform:translateX(4px) rotate(4deg);}}
+
+  /* spike traps surrounding the boy (front / back / bottom) */
+  .spikes{position:absolute; display:flex; gap:4px; z-index:5; filter:drop-shadow(0 2px 1px rgba(0,0,0,.5));}
+  .spikes i{display:block; width:0; height:0;}
+  .spikes-front{top:20%; right:-7%; flex-direction:column; transform:translateX(9px);}
+  .spikes-front i{border-top:8px solid transparent; border-bottom:8px solid transparent; border-right:20px solid #cfd3dd;}
+  .spikes-back{top:20%; left:-7%; flex-direction:column; transform:translateX(-9px);}
+  .spikes-back i{border-top:8px solid transparent; border-bottom:8px solid transparent; border-left:20px solid #cfd3dd;}
+  .spikes-bottom{left:50%; bottom:-14px; margin-left:-26px; flex-direction:row; transform:translateY(9px);}
+  .spikes-bottom i{border-left:7px solid transparent; border-right:7px solid transparent; border-bottom:20px solid #cfd3dd;}
+  .spikes-front.jab{animation:jabF .36s ease;}
+  .spikes-back.jab{animation:jabB .36s ease;}
+  .spikes-bottom.jab{animation:jabBo .36s ease;}
+  .spikes.jab i{filter:none;}
+  .spikes-front.jab i{border-right-color:#ff5a5a;}
+  .spikes-back.jab i{border-left-color:#ff5a5a;}
+  .spikes-bottom.jab i{border-bottom-color:#ff5a5a;}
+  @keyframes jabF{0%{transform:translateX(9px);}30%{transform:translateX(-20px);}60%{transform:translateX(-12px);}100%{transform:translateX(9px);}}
+  @keyframes jabB{0%{transform:translateX(-9px);}30%{transform:translateX(20px);}60%{transform:translateX(12px);}100%{transform:translateX(-9px);}}
+  @keyframes jabBo{0%{transform:translateY(9px);}30%{transform:translateY(-20px);}60%{transform:translateY(-12px);}100%{transform:translateY(9px);}}
+
+  .hit-burst{position:absolute; top:34%; left:50%; transform:translate(-50%,-50%) scale(0); opacity:0; z-index:6; pointer-events:none; font-size:clamp(36px,6.5vmin,70px); filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));}
+  .hit-burst.go{animation:burst .42s ease;}
+  @keyframes burst{0%{transform:translate(-50%,-50%) scale(0); opacity:0;}30%{transform:translate(-50%,-50%) scale(1.35); opacity:1;}100%{transform:translate(-50%,-50%) scale(1); opacity:0;}}
+
   .beat-hud{position:absolute; top:2.5%; left:50%; transform:translateX(-50%); z-index:5; display:flex; align-items:center; gap:14px;
     background:rgba(58,47,107,.7); padding:6px 18px 6px 10px; border-radius:999px; border:3px solid #fff; box-shadow:0 4px 0 var(--shadow);}
   .met-icon{font-size:clamp(24px,4vmin,40px); animation:metPulse .857s ease-in-out infinite; transform-origin:bottom center;}
@@ -186,21 +215,28 @@
   .score-label{font-weight:800; font-size:clamp(11px,1.6vmin,15px); color:var(--ink-soft);}
   .score-num{font-family:"Mochiy Pop One"; font-size:clamp(26px,4.5vmin,46px); color:var(--red-deep); line-height:1;}
 
+  .btn-stack{flex:1; width:100%; display:flex; flex-direction:column; gap:.9vh; margin-top:.3vh;}
   .zure-btn{
-    flex:1; width:100%; margin-top:.4vh;
+    flex:1; width:100%;
     background:radial-gradient(circle at 50% 28%,#ff8a8a 0%,#ff5a5a 45%,#d22b2b 100%);
-    border:6px solid #fff; border-radius:30px; color:#fff;
+    border:6px solid #fff; border-radius:26px; color:#fff;
     font-family:"Mochiy Pop One"; cursor:pointer; position:relative; overflow:hidden;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
-    box-shadow:0 12px 0 #9c1f1f, inset 0 8px 16px rgba(255,255,255,.55), inset 0 -14px 22px rgba(0,0,0,.28);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+    box-shadow:0 10px 0 #9c1f1f, inset 0 8px 16px rgba(255,255,255,.55), inset 0 -14px 22px rgba(0,0,0,.28);
     transition:transform .06s ease, box-shadow .06s ease;
     text-shadow:0 3px 0 #9c1f1f, 0 5px 8px rgba(0,0,0,.3);
   }
-  .zure-btn:active,.zure-btn.squish{transform:translateY(8px) scale(.985); box-shadow:0 3px 0 #9c1f1f, inset 0 8px 16px rgba(255,255,255,.5), inset 0 -10px 18px rgba(0,0,0,.3);}
+  .zure-btn:active,.zure-btn.squish{transform:translateY(7px) scale(.985); box-shadow:0 3px 0 #9c1f1f, inset 0 8px 16px rgba(255,255,255,.5), inset 0 -10px 18px rgba(0,0,0,.3);}
   .zure-btn:focus-visible{outline:6px solid var(--ink); outline-offset:4px;}
-  .zb-big{font-size:clamp(30px,5.6vmin,60px); line-height:1;}
-  .zb-icon{font-size:clamp(28px,5vmin,52px); line-height:1;}
-  .zb-sub{font-size:clamp(12px,1.9vmin,19px); background:rgba(0,0,0,.22); padding:3px 14px; border-radius:999px;}
+  .zure-btn.slow{
+    background:radial-gradient(circle at 50% 28%,#9ec0ff 0%,#5b7fe0 45%,#2f49b0 100%);
+    box-shadow:0 10px 0 #213a8c, inset 0 8px 16px rgba(255,255,255,.55), inset 0 -14px 22px rgba(0,0,0,.28);
+    text-shadow:0 3px 0 #213a8c, 0 5px 8px rgba(0,0,0,.3);
+  }
+  .zure-btn.slow:active,.zure-btn.slow.squish{box-shadow:0 3px 0 #213a8c, inset 0 8px 16px rgba(255,255,255,.5), inset 0 -10px 18px rgba(0,0,0,.3);}
+  .zb-big{font-size:clamp(24px,4.6vmin,50px); line-height:1;}
+  .zb-icon{font-size:clamp(22px,3.8vmin,42px); line-height:1;}
+  .zb-sub{font-size:clamp(10px,1.55vmin,15px); background:rgba(0,0,0,.22); padding:3px 12px; border-radius:999px;}
   .zb-shine{position:absolute; top:-30%; left:-25%; width:55%; height:160%; background:linear-gradient(120deg,rgba(255,255,255,.45),transparent); transform:rotate(18deg); pointer-events:none;}
 
   .quit-btn{width:100%; background:linear-gradient(180deg,#b7add9,#8f83c0); font-size:clamp(12px,1.8vmin,17px); padding:8px; border-radius:16px;}
@@ -279,9 +315,9 @@
       <button class="tool-btn" id="muteBtnTitle" aria-label="おとを けす">🔊</button>
     </div>
     <div class="title-inner">
-      <h1 class="game-logo"><span class="logo-mushroom">🍄</span> ぴったり ウォーク！</h1>
+      <h1 class="game-logo"><span class="logo-mushroom">👦</span> ぴったり ウォーク！</h1>
       <p class="subtitle">せんせいと いっしょに、リズムよく あるこう！</p>
-      <p class="howto">🎵 メトロノームの おとに あわせて、<b>はやすぎず・おそすぎず</b> いっていの ペースで あるいてね。せんせいは、ペースが ズレたなと おもったら 大きな ボタンを おしてね。</p>
+      <p class="howto">🎵 メトロノームの おとに あわせて、<b>はやすぎず・おそすぎず</b> いっていの ペースで あるいてね。男の子は まえ・うしろ・した を トゲに かこまれているよ。せんせいは ペースが はやいと <b>「はやい！」</b>、おそいと <b>「おそい！」</b> を おしてね。おすと トゲが グサッと ささるよ。</p>
       <p class="level-prompt">レベルを えらんでね</p>
       <div class="levels" id="levels"></div>
     </div>
@@ -301,10 +337,16 @@
         <span class="beat-ring" id="beatRing"></span>
       </div>
       <div class="walker" id="walker">
-        <div class="walker-bob" id="walkerBob">🍄</div>
+        <div class="spikes spikes-back" id="spikeBack"><i></i><i></i><i></i></div>
+        <div class="bob-shake" id="bobShake">
+          <div class="walker-bob" id="walkerBob">👦</div>
+        </div>
+        <div class="spikes spikes-front" id="spikeFront"><i></i><i></i><i></i></div>
+        <div class="spikes spikes-bottom" id="spikeBottom"><i></i><i></i><i></i><i></i></div>
+        <div class="hit-burst" id="hitBurst">💥</div>
         <div class="walker-shadow" id="walkerShadow"></div>
       </div>
-      <div class="child-hint">おとに あわせて あるこう！</div>
+      <div class="child-hint">トゲに ささらないように、おとに あわせて あるこう！</div>
     </div>
     <aside class="teacher-area">
       <div class="round-badge" id="roundBadge">1かいめ / 5かい</div>
@@ -317,12 +359,20 @@
         <div class="score-label">ズレた かいすう</div>
         <div class="score-num" id="scoreNum">0</div>
       </div>
-      <button class="zure-btn" id="zureBtn" aria-label="ペースが ズレた ときに おす">
-        <span class="zb-shine"></span>
-        <span class="zb-icon">🚫</span>
-        <span class="zb-big">ズレた！</span>
-        <span class="zb-sub">はやい・おそい</span>
-      </button>
+      <div class="btn-stack">
+        <button class="zure-btn fast" id="btnFast" aria-label="はやすぎる ときに おす">
+          <span class="zb-shine"></span>
+          <span class="zb-icon">⏩</span>
+          <span class="zb-big">はやい！</span>
+          <span class="zb-sub">まえの トゲに ささる</span>
+        </button>
+        <button class="zure-btn slow" id="btnSlow" aria-label="おそすぎる ときに おす">
+          <span class="zb-shine"></span>
+          <span class="zb-icon">🐢</span>
+          <span class="zb-big">おそい！</span>
+          <span class="zb-sub">うしろの トゲに ささる</span>
+        </button>
+      </div>
       <button class="glossy-btn quit-btn" id="quitBtn">やめる</button>
     </aside>
   </section>
@@ -374,14 +424,14 @@ var LEVELS = [
       bass:[{n:"C3",d:.5},{n:"C3",d:.5},{n:"F2",d:.5},{n:"F2",d:.5},{n:"G2",d:.5},{n:"G2",d:.5},{n:"C3",d:.5},{n:"G2",d:.5}] } },
 
   { id:4, badge:"レベル4", name:"むずかしい", emoji:"🔥", color:"linear-gradient(180deg,#ff8a4d,#d23b1f)",
-    bpm:50, clear:80, speedLabel:"ゆっくり", mood:"きんちょう",
+    bpm:45, clear:80, speedLabel:"ゆっくり", mood:"きんちょう",
     bgm:{ tempo:118, leadType:"square", bassType:"square",
       lead:[{n:"A4",d:1},{n:"C5",d:1},{n:"E5",d:1},{n:"A5",d:1},{n:"G5",d:.5},{n:"F5",d:.5},{n:"E5",d:1},
             {n:"A4",d:1},{n:"B4",d:1},{n:"C5",d:2},{n:"E5",d:2}],
       bass:[{n:"A2",d:1},{n:"A2",d:1},{n:"F2",d:1},{n:"F2",d:1},{n:"G2",d:1},{n:"G2",d:1},{n:"E2",d:1},{n:"E2",d:1}] } },
 
   { id:5, badge:"レベル5", name:"ゲキムズ", emoji:"💀", color:"linear-gradient(180deg,#a05bff,#5b1fb0)",
-    bpm:50, clear:90, speedLabel:"ゆっくり", mood:"スリリング",
+    bpm:40, clear:90, speedLabel:"とても ゆっくり", mood:"スリリング",
     note:"おんがくは はやいけど、メトロノームの ゆっくりを まもってね！",
     bgm:{ tempo:170, leadType:"square", bassType:"sawtooth",
       lead:[{n:"A5",d:.25},{n:"A5",d:.25},{n:"E5",d:.25},{n:"A5",d:.25},{n:"C6",d:.25},{n:"A5",d:.25},{n:"E5",d:.25},{n:"A5",d:.25},
@@ -537,9 +587,11 @@ var session = { levelId:null, round:1, results:[] };
 function $(id){ return document.getElementById(id); }
 var elTitle=$("title"), elGame=$("game"), elResult=$("result");
 var elWalker=$("walker"), elTimerNum=$("timerNum"), elTimerFill=$("timerFill");
-var elScore=$("scoreNum"), elRound=$("roundBadge"), elZure=$("zureBtn");
+var elScore=$("scoreNum"), elRound=$("roundBadge");
+var elBtnFast=$("btnFast"), elBtnSlow=$("btnSlow");
 var elFlash=$("flash"), elConfetti=$("confetti"), elCountdown=$("countdown");
 var elMet=$("metIcon"), elBeatRing=$("beatRing"), elBob=$("walkerBob"), elShadow=$("walkerShadow");
+var elBobShake=$("bobShake"), elSpikeFront=$("spikeFront"), elSpikeBack=$("spikeBack"), elSpikeBottom=$("spikeBottom"), elHitBurst=$("hitBurst");
 var elTrack=$("trackArea");
 
 /* ---- 画面切替 ---- */
@@ -612,6 +664,11 @@ function startGame(){
   elRound.textContent = session.round + "かいめ / 5かい";
   elTimerNum.textContent = DURATION;
   elTimerFill.style.width = "100%";
+  elBob.textContent = "👦";
+  elBobShake.classList.remove("hurt");
+  elSpikeFront.classList.remove("jab");
+  elSpikeBack.classList.remove("jab");
+  elSpikeBottom.classList.remove("jab");
 
   // リズムに合わせてアニメーション速度を設定
   var beatSec = (60 / level.bpm);
@@ -691,16 +748,16 @@ function positionWalker(p){
 }
 
 /* ============================================================
-   先生のボタン操作
+   先生のボタン操作（はやい / おそい）
    ============================================================ */
-function press(){
+function press(type){
   if(!running) return;
   pressCount++;
   elScore.textContent = String(pressCount);
   flashRed();
   buzzer();
-  floatZure();
-  squish();
+  stab(type);
+  squish(type);
 }
 
 function flashRed(){
@@ -709,17 +766,47 @@ function flashRed(){
   elFlash.classList.add("go");
 }
 
-function squish(){
-  elZure.classList.add("squish");
-  setTimeout(function(){ elZure.classList.remove("squish"); }, 120);
+function squish(type){
+  var btn = (type === "slow") ? elBtnSlow : elBtnFast;
+  btn.classList.add("squish");
+  setTimeout(function(){ btn.classList.remove("squish"); }, 130);
 }
 
-function floatZure(){
+/* トゲがグサッと刺さる演出 */
+function stab(type){
+  // 男の子が「いてっ！」となる
+  elBob.textContent = "😣";
+  elBobShake.classList.add("hurt");
+  // バーストとフロート文字
+  elHitBurst.classList.remove("go"); void elHitBurst.offsetWidth; elHitBurst.classList.add("go");
+
+  if(type === "slow"){
+    // おそい → うしろ（左）のトゲが刺さる
+    elSpikeBack.classList.add("jab");
+    floatHit("おそい！", "#2f49b0");
+  } else {
+    // はやい → まえ（右）と したのトゲが刺さる
+    elSpikeFront.classList.add("jab");
+    elSpikeBottom.classList.add("jab");
+    floatHit("はやい！", "#d22b2b");
+  }
+
+  setTimeout(function(){
+    elBob.textContent = "👦";
+    elBobShake.classList.remove("hurt");
+    elSpikeFront.classList.remove("jab");
+    elSpikeBack.classList.remove("jab");
+    elSpikeBottom.classList.remove("jab");
+  }, 380);
+}
+
+function floatHit(text, color){
   var rect = elWalker.getBoundingClientRect();
   var trackRect = elTrack.getBoundingClientRect();
   var f = document.createElement("div");
   f.className = "float-zure";
-  f.textContent = "ズレ！";
+  f.textContent = text;
+  if(color){ f.style.webkitTextStrokeColor = color; }
   f.style.left = (rect.left - trackRect.left + rect.width/2) + "px";
   f.style.top = (rect.top - trackRect.top) + "px";
   elTrack.appendChild(f);
@@ -753,7 +840,7 @@ function showRoundResult(rate, cleared, total, success){
     msgHtml = '<div class="res-msg">すごい！ぴったり あるけたね！</div>';
   } else {
     titleHtml = '<div class="res-title lose">おしい！</div>';
-    starHtml = '<div class="res-star">🍄</div>';
+    starHtml = '<div class="res-star">👦</div>';
     msgHtml = '<div class="res-msg">よく がんばったね！</div>';
   }
 
@@ -842,7 +929,7 @@ function showFinalResult(){
    紙吹雪
    ============================================================ */
 function launchConfetti(amount){
-  var emojis = ["🎉","🎊","⭐","🍄","🌟","💛","💙","💚","🧡","❤️","✨"];
+  var emojis = ["🎉","🎊","⭐","👟","🌟","💛","💙","💚","🧡","❤️","✨"];
   var colors = ["#ffd34d","#ff5a5a","#7bd14a","#5ec4ff","#a05bff","#ff8a4d","#fff"];
   for(var i=0;i<amount;i++){
     var pc = document.createElement("div");
@@ -892,16 +979,24 @@ function toggleMute(){
    イベント登録
    ============================================================ */
 // ボタンは pointerdown で即反応（押し間違い防止＆反応の速さ重視）
-elZure.addEventListener("pointerdown", function(e){ e.preventDefault(); press(); });
-elZure.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+elBtnFast.addEventListener("pointerdown", function(e){ e.preventDefault(); press("fast"); });
+elBtnSlow.addEventListener("pointerdown", function(e){ e.preventDefault(); press("slow"); });
+elBtnFast.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+elBtnSlow.addEventListener("contextmenu", function(e){ e.preventDefault(); });
 $("quitBtn").addEventListener("click", function(){
   goTitle();
 });
 $("muteBtnTitle").addEventListener("click", toggleMute);
 
-// スペースキーでもズレた！を押せる（外付けスイッチ等の配慮）
+// キーボード／外付けスイッチの配慮：
+//   スペース・→・↑ → はやい！ ／ ←・↓ → おそい！
 window.addEventListener("keydown", function(e){
-  if((e.code === "Space" || e.key === " ") && running){ e.preventDefault(); press(); }
+  if(!running) return;
+  if(e.code === "Space" || e.key === " " || e.code === "ArrowRight" || e.code === "ArrowUp"){
+    e.preventDefault(); press("fast");
+  } else if(e.code === "ArrowLeft" || e.code === "ArrowDown"){
+    e.preventDefault(); press("slow");
+  }
 });
 
 // 起動
