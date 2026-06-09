@@ -154,9 +154,62 @@
   @keyframes wave{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(6deg);}}
 
   .walker{position:absolute; bottom:11.5%; z-index:4; left:6%; transform:translateX(-50%); will-change:left;}
-  .walker-bob{font-size:clamp(58px,10vmin,108px); line-height:1; filter:drop-shadow(0 6px 4px rgba(0,0,0,.3)); animation:walkBob .857s ease-in-out infinite;}
-  @keyframes walkBob{0%,100%{transform:translateY(0) rotate(-4deg) scaleY(1);}50%{transform:translateY(-22%) rotate(4deg) scaleY(1.04);}}
-  .walker-shadow{position:absolute; bottom:-8px; left:50%; transform:translateX(-50%); width:60%; height:14px; background:rgba(0,0,0,.22); border-radius:50%; filter:blur(2px); animation:shadowPulse .857s ease-in-out infinite;}
+  .walker-bob{display:inline-block; line-height:1; filter:drop-shadow(0 7px 4px rgba(0,0,0,.32));}
+
+  /* ---- CSS で描いた、マリオの世界観ふうの 歩く男の子 ---- */
+  .boy{
+    --beat:0.857s; --cyc:1.714s;
+    position:relative; width:6.6em; height:9.4em;
+    font-size:clamp(9px,1.55vmin,15px);
+    animation:bodyBob var(--beat) ease-in-out infinite;
+  }
+  .boy>*{position:absolute;}
+  @keyframes bodyBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-0.4em);}}
+
+  .boy-cap{top:.2em; left:1.5em; width:3.8em; height:1.9em; z-index:6;
+    background:linear-gradient(160deg,#ff7a7a,#e02b2b 70%); border-radius:1.9em 1.9em .5em .5em;
+    box-shadow:inset 0 .3em .4em rgba(255,255,255,.5);}
+  .boy-brim{top:1.5em; left:4.4em; width:2.2em; height:.7em; z-index:7;
+    background:linear-gradient(#e02b2b,#b51f1f); border-radius:.3em .8em .8em .3em; box-shadow:0 .15em .2em rgba(0,0,0,.25);}
+  .boy-head{top:1.5em; left:1.7em; width:3.4em; height:3em; z-index:4;
+    background:radial-gradient(circle at 62% 42%,#ffe2c0,#f0bd8e); border-radius:1.5em;
+    box-shadow:inset -.3em -.3em .5em rgba(180,120,70,.35);}
+  .boy-ear{top:1.6em; left:-.35em; width:.9em; height:.9em; z-index:3;
+    background:#f0bd8e; border-radius:50%;}
+  .boy-eye{top:1em; width:.5em; height:.7em; z-index:5; background:#2f2a4a; border-radius:50%;}
+  .boy-eye.left{left:1.55em;} .boy-eye.right{left:2.45em;}
+  .boy-mouth{top:2em; left:1.8em; width:.95em; height:.25em; z-index:5; background:#9c4a2a; border-radius:0 0 .4em .4em;}
+  .boy.hurt .boy-eye{transform:scaleY(.18);}
+  .boy.hurt .boy-mouth{top:1.85em; left:1.9em; width:.7em; height:.7em; border-radius:50%; background:#7a2f17;}
+
+  .boy-shirt{top:4.3em; left:1.9em; width:3em; height:1.2em; z-index:2;
+    background:linear-gradient(#ffe06a,#ffc01e); border-radius:.6em;}
+  .boy-body{top:4.9em; left:1.6em; width:3.5em; height:2.9em; z-index:3;
+    background:linear-gradient(165deg,#5a93f0,#2b5fc0 70%); border-radius:.8em .8em .9em .9em;
+    box-shadow:inset 0 .3em .5em rgba(255,255,255,.4), inset 0 -.4em .5em rgba(0,0,0,.2);}
+  .boy-body .strap{position:absolute; top:-1.2em; width:.55em; height:1.5em; background:#2b5fc0; border-radius:.2em;}
+  .boy-body .strap.s1{left:.45em; transform:rotate(8deg);} .boy-body .strap.s2{left:2.45em; transform:rotate(-8deg);}
+  .boy-body .btn{position:absolute; top:.5em; width:.45em; height:.45em; border-radius:50%; background:#ffd34d; box-shadow:inset 0 .08em .1em rgba(0,0,0,.3);}
+  .boy-body .btn.b1{left:.6em;} .boy-body .btn.b2{left:2.45em;}
+
+  .boy-arm{top:5em; width:.85em; height:2.2em; background:linear-gradient(#ffe06a,#ffbe14);
+    border-radius:.45em; transform-origin:top center;}
+  .boy-arm::after{content:""; position:absolute; bottom:-.45em; left:-.1em; width:1.05em; height:1.05em; background:#f0bd8e; border-radius:50%;}
+  .boy-arm.back{left:1.35em; z-index:1; animation:armBack var(--cyc) ease-in-out infinite;}
+  .boy-arm.front{left:4.3em; z-index:5; animation:armFront var(--cyc) ease-in-out infinite;}
+
+  .boy-leg{top:7.4em; width:1.15em; height:2.1em; background:linear-gradient(#3f7fe0,#234fa8);
+    border-radius:.35em; transform-origin:top center;}
+  .boy-leg::after{content:""; position:absolute; bottom:-.35em; left:-.25em; width:1.7em; height:.95em; background:linear-gradient(#7a4a22,#5a3414); border-radius:.5em .7em .4em .4em; box-shadow:0 .2em .25em rgba(0,0,0,.3);}
+  .boy-leg.back{left:2.3em; z-index:1; animation:legBack var(--cyc) ease-in-out infinite;}
+  .boy-leg.front{left:3.5em; z-index:3; animation:legFront var(--cyc) ease-in-out infinite;}
+
+  @keyframes legFront{0%{transform:rotate(24deg);}50%{transform:rotate(-22deg);}100%{transform:rotate(24deg);}}
+  @keyframes legBack{0%{transform:rotate(-22deg);}50%{transform:rotate(24deg);}100%{transform:rotate(-22deg);}}
+  @keyframes armFront{0%{transform:rotate(-26deg);}50%{transform:rotate(24deg);}100%{transform:rotate(-26deg);}}
+  @keyframes armBack{0%{transform:rotate(24deg);}50%{transform:rotate(-26deg);}100%{transform:rotate(24deg);}}
+
+  .walker-shadow{position:absolute; bottom:-8px; left:50%; transform:translateX(-50%); width:64%; height:14px; background:rgba(0,0,0,.22); border-radius:50%; filter:blur(2px); animation:shadowPulse .857s ease-in-out infinite;}
   @keyframes shadowPulse{0%,100%{transform:translateX(-50%) scale(1); opacity:.28;}50%{transform:translateX(-50%) scale(.7); opacity:.16;}}
 
   /* boy shake on hit (separate layer so it won't fight the walk/centering transforms) */
@@ -164,25 +217,35 @@
   .bob-shake.hurt{animation:hurtShake .36s ease;}
   @keyframes hurtShake{0%,100%{transform:translateX(0) rotate(0);}20%{transform:translateX(-6px) rotate(-7deg);}40%{transform:translateX(6px) rotate(7deg);}60%{transform:translateX(-4px) rotate(-4deg);}80%{transform:translateX(4px) rotate(4deg);}}
 
-  /* spike traps surrounding the boy (front / back / bottom) */
+  /* spike traps in front of / behind the boy */
   .spikes{position:absolute; display:flex; gap:4px; z-index:5; filter:drop-shadow(0 2px 1px rgba(0,0,0,.5));}
   .spikes i{display:block; width:0; height:0;}
-  .spikes-front{top:20%; right:-7%; flex-direction:column; transform:translateX(9px);}
+  .spikes-front{top:22%; right:-9%; flex-direction:column; transform:translateX(9px);}
   .spikes-front i{border-top:8px solid transparent; border-bottom:8px solid transparent; border-right:20px solid #cfd3dd;}
-  .spikes-back{top:20%; left:-7%; flex-direction:column; transform:translateX(-9px);}
+  .spikes-back{top:22%; left:-9%; flex-direction:column; transform:translateX(-9px);}
   .spikes-back i{border-top:8px solid transparent; border-bottom:8px solid transparent; border-left:20px solid #cfd3dd;}
-  .spikes-bottom{left:50%; bottom:-14px; margin-left:-26px; flex-direction:row; transform:translateY(9px);}
-  .spikes-bottom i{border-left:7px solid transparent; border-right:7px solid transparent; border-bottom:20px solid #cfd3dd;}
   .spikes-front.jab{animation:jabF .36s ease;}
   .spikes-back.jab{animation:jabB .36s ease;}
-  .spikes-bottom.jab{animation:jabBo .36s ease;}
-  .spikes.jab i{filter:none;}
   .spikes-front.jab i{border-right-color:#ff5a5a;}
   .spikes-back.jab i{border-left-color:#ff5a5a;}
-  .spikes-bottom.jab i{border-bottom-color:#ff5a5a;}
   @keyframes jabF{0%{transform:translateX(9px);}30%{transform:translateX(-20px);}60%{transform:translateX(-12px);}100%{transform:translateX(9px);}}
   @keyframes jabB{0%{transform:translateX(-9px);}30%{transform:translateX(20px);}60%{transform:translateX(12px);}100%{transform:translateX(-9px);}}
-  @keyframes jabBo{0%{transform:translateY(9px);}30%{transform:translateY(-20px);}60%{transform:translateY(-12px);}100%{transform:translateY(9px);}}
+
+  /* とびいし／橋：1拍ごとに足場が ポンッ と現れる */
+  .bridge{position:absolute; inset:0; z-index:2; pointer-events:none;}
+  .plank{position:absolute; bottom:10%; height:clamp(11px,1.9vmin,19px);
+    background:linear-gradient(#e0b066,#a9722f 70%,#8a5a22); border:2px solid #6f4720; border-radius:5px;
+    transform:translateX(-50%) translateY(8px) scaleY(0); transform-origin:bottom center; opacity:0;
+    box-shadow:0 3px 0 rgba(70,45,20,.35), inset 0 2px 2px rgba(255,255,255,.45);}
+  .plank::after{content:""; position:absolute; left:14%; right:14%; top:38%; height:2px; background:rgba(110,71,32,.5); border-radius:2px;}
+  .plank.on{animation:plankPop .26s cubic-bezier(.2,1.6,.5,1) forwards;}
+  @keyframes plankPop{0%{transform:translateX(-50%) translateY(8px) scaleY(0); opacity:0;}60%{transform:translateX(-50%) translateY(-3px) scaleY(1.18); opacity:1;}100%{transform:translateX(-50%) translateY(0) scaleY(1); opacity:1;}}
+  .plank.broke{animation:plankBreak .55s ease forwards;}
+  @keyframes plankBreak{0%{transform:translateX(-50%) translateY(0) rotate(0);}100%{transform:translateX(-50%) translateY(26px) rotate(16deg); opacity:0; background:#9a9da8;}}
+
+  .splash{position:absolute; z-index:6; font-size:clamp(28px,5vmin,52px); pointer-events:none;
+    transform:translate(-50%,-50%) scale(.4); opacity:0; animation:splashAnim .6s ease-out forwards; filter:drop-shadow(0 2px 3px rgba(0,0,0,.3));}
+  @keyframes splashAnim{0%{opacity:0; transform:translate(-50%,-40%) scale(.4);}30%{opacity:1; transform:translate(-50%,-70%) scale(1.12);}100%{opacity:0; transform:translate(-50%,-100%) scale(.9);}}
 
   .hit-burst{position:absolute; top:34%; left:50%; transform:translate(-50%,-50%) scale(0); opacity:0; z-index:6; pointer-events:none; font-size:clamp(36px,6.5vmin,70px); filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));}
   .hit-burst.go{animation:burst .42s ease;}
@@ -317,7 +380,7 @@
     <div class="title-inner">
       <h1 class="game-logo"><span class="logo-mushroom">👦</span> ぴったり ウォーク！</h1>
       <p class="subtitle">せんせいと いっしょに、リズムよく あるこう！</p>
-      <p class="howto">🎵 メトロノームの おとに あわせて、<b>はやすぎず・おそすぎず</b> いっていの ペースで あるいてね。男の子は まえ・うしろ・した を トゲに かこまれているよ。せんせいは ペースが はやいと <b>「はやい！」</b>、おそいと <b>「おそい！」</b> を おしてね。おすと トゲが グサッと ささるよ。</p>
+      <p class="howto">🎵 メトロノームの おとに あわせて、<b>はやすぎず・おそすぎず</b> いっていの ペースで あるいてね。1ぱく ごとに <b>あしば（いし）</b> が ポンッ と でてくるから、それを ふんで あるこう。男の子は まえ と うしろ を トゲに かこまれているよ。せんせいは ペースが はやいと <b>「はやい！」</b>、おそいと <b>「おそい！」</b> を おしてね。</p>
       <p class="level-prompt">レベルを えらんでね</p>
       <div class="levels" id="levels"></div>
     </div>
@@ -329,6 +392,7 @@
       <div class="track-deco" id="trackDeco"></div>
       <div class="ground"></div>
       <div class="lane"></div>
+      <div class="bridge" id="bridge"></div>
       <div class="start-pipe"></div>
       <div class="goal"><div class="goal-flag">🏁</div><div class="goal-label">ゴール</div></div>
       <div class="beat-hud">
@@ -339,14 +403,30 @@
       <div class="walker" id="walker">
         <div class="spikes spikes-back" id="spikeBack"><i></i><i></i><i></i></div>
         <div class="bob-shake" id="bobShake">
-          <div class="walker-bob" id="walkerBob">👦</div>
+          <div class="walker-bob" id="walkerBob">
+            <div class="boy" id="boy">
+              <div class="boy-arm back"></div>
+              <div class="boy-leg back"></div>
+              <div class="boy-leg front"></div>
+              <div class="boy-shirt"></div>
+              <div class="boy-body"><span class="strap s1"></span><span class="strap s2"></span><span class="btn b1"></span><span class="btn b2"></span></div>
+              <div class="boy-arm front"></div>
+              <div class="boy-head">
+                <div class="boy-ear"></div>
+                <div class="boy-eye left"></div>
+                <div class="boy-eye right"></div>
+                <div class="boy-mouth"></div>
+              </div>
+              <div class="boy-cap"></div>
+              <div class="boy-brim"></div>
+            </div>
+          </div>
         </div>
         <div class="spikes spikes-front" id="spikeFront"><i></i><i></i><i></i></div>
-        <div class="spikes spikes-bottom" id="spikeBottom"><i></i><i></i><i></i><i></i></div>
         <div class="hit-burst" id="hitBurst">💥</div>
         <div class="walker-shadow" id="walkerShadow"></div>
       </div>
-      <div class="child-hint">トゲに ささらないように、おとに あわせて あるこう！</div>
+      <div class="child-hint">おとに あわせて、でてくる いしを ふんで あるこう！</div>
     </div>
     <aside class="teacher-area">
       <div class="round-badge" id="roundBadge">1かいめ / 5かい</div>
@@ -415,7 +495,7 @@ var LEVELS = [
       bass:[{n:"C3",d:1},{n:"G2",d:1},{n:"A2",d:1},{n:"G2",d:1},{n:"F2",d:1},{n:"C3",d:1},{n:"G2",d:1},{n:"G2",d:1}] } },
 
   { id:3, badge:"レベル3", name:"ふつう（もくひょう）", emoji:"⭐", color:"linear-gradient(180deg,#ffd34d,#e89400)",
-    bpm:60, clear:80, speedLabel:"きほん", mood:"ワクワク",
+    bpm:50, clear:80, speedLabel:"ゆっくり", mood:"ワクワク",
     bgm:{ tempo:132, leadType:"square", bassType:"square",
       lead:[{n:"C5",d:.5},{n:"E5",d:.5},{n:"G5",d:.5},{n:"C6",d:.5},{n:"G5",d:.5},{n:"E5",d:.5},
             {n:"F5",d:.5},{n:"A5",d:.5},{n:"C6",d:.5},{n:"A5",d:.5},{n:"G5",d:.5},{n:"E5",d:.5},
@@ -424,14 +504,14 @@ var LEVELS = [
       bass:[{n:"C3",d:.5},{n:"C3",d:.5},{n:"F2",d:.5},{n:"F2",d:.5},{n:"G2",d:.5},{n:"G2",d:.5},{n:"C3",d:.5},{n:"G2",d:.5}] } },
 
   { id:4, badge:"レベル4", name:"むずかしい", emoji:"🔥", color:"linear-gradient(180deg,#ff8a4d,#d23b1f)",
-    bpm:45, clear:80, speedLabel:"ゆっくり", mood:"きんちょう",
+    bpm:40, clear:80, speedLabel:"とても ゆっくり", mood:"きんちょう",
     bgm:{ tempo:118, leadType:"square", bassType:"square",
       lead:[{n:"A4",d:1},{n:"C5",d:1},{n:"E5",d:1},{n:"A5",d:1},{n:"G5",d:.5},{n:"F5",d:.5},{n:"E5",d:1},
             {n:"A4",d:1},{n:"B4",d:1},{n:"C5",d:2},{n:"E5",d:2}],
       bass:[{n:"A2",d:1},{n:"A2",d:1},{n:"F2",d:1},{n:"F2",d:1},{n:"G2",d:1},{n:"G2",d:1},{n:"E2",d:1},{n:"E2",d:1}] } },
 
   { id:5, badge:"レベル5", name:"ゲキムズ", emoji:"💀", color:"linear-gradient(180deg,#a05bff,#5b1fb0)",
-    bpm:40, clear:90, speedLabel:"とても ゆっくり", mood:"スリリング",
+    bpm:30, clear:90, speedLabel:"すごく ゆっくり", mood:"スリリング",
     note:"おんがくは はやいけど、メトロノームの ゆっくりを まもってね！",
     bgm:{ tempo:170, leadType:"square", bassType:"sawtooth",
       lead:[{n:"A5",d:.25},{n:"A5",d:.25},{n:"E5",d:.25},{n:"A5",d:.25},{n:"C6",d:.25},{n:"A5",d:.25},{n:"E5",d:.25},{n:"A5",d:.25},
@@ -547,17 +627,24 @@ function beep(hi){
    スケジューラ（メトロノーム + BGM）
    ============================================================ */
 var schedTimer=null;
-var metTime=0, leadTime=0, bassTime=0, leadIdx=0, bassIdx=0;
+var metTime=0, leadTime=0, bassTime=0, leadIdx=0, bassIdx=0, metBeat=0;
 
 function startScheduler(){
   var startAt = actx.currentTime + 0.12;
   metTime = leadTime = bassTime = startAt;
-  leadIdx = bassIdx = 0;
+  leadIdx = bassIdx = metBeat = 0;
   schedTimer = setInterval(function(){
     if(!actx) return;
     var ahead = actx.currentTime + 0.18;
     var metStep = 60 / level.bpm;
-    while(metTime < ahead){ tick(metTime); metTime += metStep; }
+    while(metTime < ahead){
+      tick(metTime);
+      // メトロノームの 拍 に あわせて、足場を ポンッ と 出す
+      (function(t, idx){
+        setTimeout(function(){ if(running){ revealPlank(idx); } }, Math.max(0, (t - actx.currentTime) * 1000));
+      })(metTime, metBeat);
+      metTime += metStep; metBeat++;
+    }
     var beatLen = 60 / level.bgm.tempo;
     var lead = level.bgm.lead, bass = level.bgm.bass;
     while(leadTime < ahead){
@@ -591,7 +678,9 @@ var elScore=$("scoreNum"), elRound=$("roundBadge");
 var elBtnFast=$("btnFast"), elBtnSlow=$("btnSlow");
 var elFlash=$("flash"), elConfetti=$("confetti"), elCountdown=$("countdown");
 var elMet=$("metIcon"), elBeatRing=$("beatRing"), elBob=$("walkerBob"), elShadow=$("walkerShadow");
-var elBobShake=$("bobShake"), elSpikeFront=$("spikeFront"), elSpikeBack=$("spikeBack"), elSpikeBottom=$("spikeBottom"), elHitBurst=$("hitBurst");
+var elBoy=$("boy"), elBobShake=$("bobShake"), elSpikeFront=$("spikeFront"), elSpikeBack=$("spikeBack"), elHitBurst=$("hitBurst");
+var elBridge=$("bridge");
+var planks=[];
 var elTrack=$("trackArea");
 
 /* ---- 画面切替 ---- */
@@ -664,20 +753,21 @@ function startGame(){
   elRound.textContent = session.round + "かいめ / 5かい";
   elTimerNum.textContent = DURATION;
   elTimerFill.style.width = "100%";
-  elBob.textContent = "👦";
+  elBoy.classList.remove("hurt");
   elBobShake.classList.remove("hurt");
   elSpikeFront.classList.remove("jab");
   elSpikeBack.classList.remove("jab");
-  elSpikeBottom.classList.remove("jab");
 
   // リズムに合わせてアニメーション速度を設定
   var beatSec = (60 / level.bpm);
-  elBob.style.animationDuration = beatSec + "s";
+  elBoy.style.setProperty("--beat", beatSec + "s");      // からだの うわした（1歩=1ビート）
+  elBoy.style.setProperty("--cyc", (beatSec * 2) + "s"); // 足・うでの ふりこ（2歩で1周期）
   elShadow.style.animationDuration = beatSec + "s";
   elMet.style.animationDuration = beatSec + "s";
   elBeatRing.style.animationDuration = beatSec + "s";
 
   positionWalker(0);
+  buildBridge();
 
   // 背景の色をレベルの雰囲気に合わせる
   paintTrackMood();
@@ -748,6 +838,46 @@ function positionWalker(p){
 }
 
 /* ============================================================
+   とびいし／橋：1拍ごとに 足場が あらわれる
+   ============================================================ */
+function buildBridge(){
+  elBridge.innerHTML = "";
+  planks = [];
+  var total = level.bpm;                 // 全歩数 = BPMと同数
+  var widthPct = (84 / total) * 0.86;    // となりと くっつきすぎない はば
+  for(var i=0; i<total; i++){
+    var p = document.createElement("div");
+    p.className = "plank";
+    p.style.left = (4 + (i / total) * 84) + "%";   // 拍 i のとき 男の子が いる いち
+    p.style.width = widthPct + "%";
+    elBridge.appendChild(p);
+    planks.push(p);
+  }
+}
+function revealPlank(i){
+  if(i >= 0 && i < planks.length){ planks[i].classList.add("on"); }
+}
+
+/* 足場が くずれて 水しぶき（はやい＝まえ／おそい＝うしろ） */
+function splashSide(type){
+  var elapsed = actx.currentTime - audioStart;
+  var beatNow = Math.floor(elapsed / (60 / level.bpm));
+  var idx = (type === "slow") ? (beatNow - 1) : (beatNow + 1);
+  if(idx >= 0 && idx < planks.length){ planks[idx].classList.add("broke"); }
+
+  var rect = elWalker.getBoundingClientRect();
+  var trackRect = elTrack.getBoundingClientRect();
+  var s = document.createElement("div");
+  s.className = "splash";
+  s.textContent = "💦";
+  var offset = (type === "slow") ? -38 : 38;
+  s.style.left = (rect.left - trackRect.left + rect.width/2 + offset) + "px";
+  s.style.top = (rect.top - trackRect.top + rect.height*0.92) + "px";
+  elTrack.appendChild(s);
+  setTimeout(function(){ if(s.parentNode){ s.parentNode.removeChild(s); } }, 650);
+}
+
+/* ============================================================
    先生のボタン操作（はやい / おそい）
    ============================================================ */
 function press(type){
@@ -774,29 +904,28 @@ function squish(type){
 
 /* トゲがグサッと刺さる演出 */
 function stab(type){
-  // 男の子が「いてっ！」となる
-  elBob.textContent = "😣";
+  // 男の子が「いてっ！」となる（顔が ＞＜ になる）
+  elBoy.classList.add("hurt");
   elBobShake.classList.add("hurt");
   // バーストとフロート文字
   elHitBurst.classList.remove("go"); void elHitBurst.offsetWidth; elHitBurst.classList.add("go");
 
   if(type === "slow"){
-    // おそい → うしろ（左）のトゲが刺さる
+    // おそい → うしろ（左）のトゲが刺さる／うしろの足場が くずれる
     elSpikeBack.classList.add("jab");
     floatHit("おそい！", "#2f49b0");
   } else {
-    // はやい → まえ（右）と したのトゲが刺さる
+    // はやい → まえ（右）のトゲが刺さる／まえの足場が くずれる
     elSpikeFront.classList.add("jab");
-    elSpikeBottom.classList.add("jab");
     floatHit("はやい！", "#d22b2b");
   }
+  splashSide(type);
 
   setTimeout(function(){
-    elBob.textContent = "👦";
+    elBoy.classList.remove("hurt");
     elBobShake.classList.remove("hurt");
     elSpikeFront.classList.remove("jab");
     elSpikeBack.classList.remove("jab");
-    elSpikeBottom.classList.remove("jab");
   }, 380);
 }
 
