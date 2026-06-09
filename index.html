@@ -138,12 +138,16 @@
   .road-top{stroke:#f2d391; stroke-width:30; stroke-linecap:round; stroke-linejoin:round;}
   .board{position:absolute; inset:0; z-index:2; pointer-events:none;}
   .tile{position:absolute; width:clamp(30px,4.8vmin,50px); height:clamp(30px,4.8vmin,50px);
-    transform:translate(-50%,-50%); border-radius:50%; z-index:2;
-    background:radial-gradient(circle at 50% 32%,#fff,#ffd34d 58%,#e8a200);
-    border:3px solid #fff; box-shadow:0 3px 0 rgba(80,55,15,.35), inset 0 2px 4px rgba(255,255,255,.6);}
-  .tile.alt{background:radial-gradient(circle at 50% 32%,#fff,#8fd0ff 58%,#3a9be8);}
-  .tile.start{background:radial-gradient(circle at 50% 32%,#fff,#9be06a 58%,#4e9a25);}
-  .tile.goal{background:radial-gradient(circle at 50% 32%,#fff,#ff8a8a 58%,#e23b3b);}
+    transform:translate(-50%,-50%); border-radius:50%; z-index:2; opacity:.5;
+    background:radial-gradient(circle at 50% 32%,#fff,#ece7da 60%,#d3ccba);
+    border:3px solid rgba(255,255,255,.7); box-shadow:0 3px 0 rgba(80,55,15,.25), inset 0 2px 4px rgba(255,255,255,.5);}
+  .tile.lit{opacity:1; border-color:#fff; background:radial-gradient(circle at 50% 32%,#fff,#ffd34d 58%,#e8a200);}
+  .tile.alt.lit{background:radial-gradient(circle at 50% 32%,#fff,#8fd0ff 58%,#3a9be8);}
+  .tile.start{opacity:1; background:radial-gradient(circle at 50% 32%,#fff,#9be06a 58%,#4e9a25);}
+  .tile.goal{opacity:1; background:radial-gradient(circle at 50% 32%,#fff,#ff8a8a 58%,#e23b3b);}
+  .tile.missed{opacity:.95; border-color:#ececf0; background:radial-gradient(circle at 50% 32%,#fff,#bcbfc9 55%,#7e8290); animation:none;}
+  .tile.missed::after{content:"✕"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:"Mochiy Pop One"; color:#e23b3b; font-size:clamp(15px,2.6vmin,26px);}
   .tile .tile-icon{position:absolute; top:-1.45em; left:50%; transform:translateX(-50%); font-size:clamp(20px,3.4vmin,34px); filter:drop-shadow(0 2px 2px rgba(0,0,0,.3)); animation:wave 1.6s ease-in-out infinite;}
   .tile .tile-label{position:absolute; bottom:-1.4em; left:50%; transform:translateX(-50%); white-space:nowrap;
     font-family:"Mochiy Pop One"; font-size:clamp(9px,1.4vmin,13px); color:#fff; background:rgba(58,47,107,.7);
@@ -151,79 +155,8 @@
   @keyframes wave{0%,100%{transform:translateX(-50%) rotate(-5deg);}50%{transform:translateX(-50%) rotate(7deg);}}
   .tile.lit{animation:tileLit .42s ease forwards;}
   @keyframes tileLit{0%{transform:translate(-50%,-50%) scale(1);}
-    45%{transform:translate(-50%,-50%) scale(1.4); box-shadow:0 0 0 7px rgba(255,255,255,.5),0 3px 0 rgba(80,55,15,.35);}
-    100%{transform:translate(-50%,-50%) scale(1.12); box-shadow:0 0 0 3px rgba(255,255,255,.7),0 3px 0 rgba(80,55,15,.35);}}
-
-  .walker{position:absolute; z-index:4; left:8%; top:80%; transform:translate(-50%,-72%); will-change:left,top;}
-  .facing{display:inline-block;}
-  .walker-bob{display:inline-block; line-height:1; filter:drop-shadow(0 7px 4px rgba(0,0,0,.32));}
-  .walker-bob.hop{animation:hopArc .34s ease;}
-  @keyframes hopArc{0%{transform:translateY(0);}45%{transform:translateY(-1.6em);}100%{transform:translateY(0);}}
-
-  /* ---- CSS で描いた、マリオの世界観ふうの 歩く男の子 ---- */
-  .boy{
-    --beat:0.857s; --cyc:1.714s;
-    position:relative; width:6.6em; height:9.4em;
-    font-size:clamp(9px,1.55vmin,15px);
-    animation:bodyBob var(--beat) ease-in-out infinite;
-  }
-  .boy>*{position:absolute;}
-  @keyframes bodyBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-0.4em);}}
-
-  .boy-cap{top:.2em; left:1.5em; width:3.8em; height:1.9em; z-index:6;
-    background:linear-gradient(160deg,#ff7a7a,#e02b2b 70%); border-radius:1.9em 1.9em .5em .5em;
-    box-shadow:inset 0 .3em .4em rgba(255,255,255,.5);}
-  .boy-brim{top:1.5em; left:4.4em; width:2.2em; height:.7em; z-index:7;
-    background:linear-gradient(#e02b2b,#b51f1f); border-radius:.3em .8em .8em .3em; box-shadow:0 .15em .2em rgba(0,0,0,.25);}
-  .boy-head{top:1.5em; left:1.7em; width:3.4em; height:3em; z-index:4;
-    background:radial-gradient(circle at 62% 42%,#ffe2c0,#f0bd8e); border-radius:1.5em;
-    box-shadow:inset -.3em -.3em .5em rgba(180,120,70,.35);}
-  .boy-ear{top:1.6em; left:-.35em; width:.9em; height:.9em; z-index:3;
-    background:#f0bd8e; border-radius:50%;}
-  .boy-eye{top:1em; width:.5em; height:.7em; z-index:5; background:#2f2a4a; border-radius:50%;}
-  .boy-eye.left{left:1.55em;} .boy-eye.right{left:2.45em;}
-  .boy-mouth{top:2em; left:1.8em; width:.95em; height:.25em; z-index:5; background:#9c4a2a; border-radius:0 0 .4em .4em;}
-  .boy.hurt .boy-eye{transform:scaleY(.18);}
-  .boy.hurt .boy-mouth{top:1.85em; left:1.9em; width:.7em; height:.7em; border-radius:50%; background:#7a2f17;}
-
-  .boy-shirt{top:4.3em; left:1.9em; width:3em; height:1.2em; z-index:2;
-    background:linear-gradient(#ffe06a,#ffc01e); border-radius:.6em;}
-  .boy-body{top:4.9em; left:1.6em; width:3.5em; height:2.9em; z-index:3;
-    background:linear-gradient(165deg,#5a93f0,#2b5fc0 70%); border-radius:.8em .8em .9em .9em;
-    box-shadow:inset 0 .3em .5em rgba(255,255,255,.4), inset 0 -.4em .5em rgba(0,0,0,.2);}
-  .boy-body .strap{position:absolute; top:-1.2em; width:.55em; height:1.5em; background:#2b5fc0; border-radius:.2em;}
-  .boy-body .strap.s1{left:.45em; transform:rotate(8deg);} .boy-body .strap.s2{left:2.45em; transform:rotate(-8deg);}
-  .boy-body .btn{position:absolute; top:.5em; width:.45em; height:.45em; border-radius:50%; background:#ffd34d; box-shadow:inset 0 .08em .1em rgba(0,0,0,.3);}
-  .boy-body .btn.b1{left:.6em;} .boy-body .btn.b2{left:2.45em;}
-
-  .boy-arm{top:5em; width:.85em; height:2.2em; background:linear-gradient(#ffe06a,#ffbe14);
-    border-radius:.45em; transform-origin:top center;}
-  .boy-arm::after{content:""; position:absolute; bottom:-.45em; left:-.1em; width:1.05em; height:1.05em; background:#f0bd8e; border-radius:50%;}
-  .boy-arm.back{left:1.35em; z-index:1; animation:armBack var(--cyc) ease-in-out infinite;}
-  .boy-arm.front{left:4.3em; z-index:5; animation:armFront var(--cyc) ease-in-out infinite;}
-
-  .boy-leg{top:7.4em; width:1.15em; height:2.1em; background:linear-gradient(#3f7fe0,#234fa8);
-    border-radius:.35em; transform-origin:top center;}
-  .boy-leg::after{content:""; position:absolute; bottom:-.35em; left:-.25em; width:1.7em; height:.95em; background:linear-gradient(#7a4a22,#5a3414); border-radius:.5em .7em .4em .4em; box-shadow:0 .2em .25em rgba(0,0,0,.3);}
-  .boy-leg.back{left:2.3em; z-index:1; animation:legBack var(--cyc) ease-in-out infinite;}
-  .boy-leg.front{left:3.5em; z-index:3; animation:legFront var(--cyc) ease-in-out infinite;}
-
-  @keyframes legFront{0%{transform:rotate(24deg);}50%{transform:rotate(-22deg);}100%{transform:rotate(24deg);}}
-  @keyframes legBack{0%{transform:rotate(-22deg);}50%{transform:rotate(24deg);}100%{transform:rotate(-22deg);}}
-  @keyframes armFront{0%{transform:rotate(-26deg);}50%{transform:rotate(24deg);}100%{transform:rotate(-26deg);}}
-  @keyframes armBack{0%{transform:rotate(24deg);}50%{transform:rotate(-26deg);}100%{transform:rotate(24deg);}}
-
-  .walker-shadow{position:absolute; bottom:-8px; left:50%; transform:translateX(-50%); width:64%; height:14px; background:rgba(0,0,0,.22); border-radius:50%; filter:blur(2px); animation:shadowPulse .857s ease-in-out infinite;}
-  @keyframes shadowPulse{0%,100%{transform:translateX(-50%) scale(1); opacity:.28;}50%{transform:translateX(-50%) scale(.7); opacity:.16;}}
-
-  /* boy shake on hit (separate layer so it won't fight the walk/centering transforms) */
-  .bob-shake{display:inline-block;}
-  .bob-shake.hurt{animation:hurtShake .36s ease;}
-  @keyframes hurtShake{0%,100%{transform:translateX(0) rotate(0);}20%{transform:translateX(-6px) rotate(-7deg);}40%{transform:translateX(6px) rotate(7deg);}60%{transform:translateX(-4px) rotate(-4deg);}80%{transform:translateX(4px) rotate(4deg);}}
-
-  .hit-burst{position:absolute; top:34%; left:50%; transform:translate(-50%,-50%) scale(0); opacity:0; z-index:6; pointer-events:none; font-size:clamp(36px,6.5vmin,70px); filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));}
-  .hit-burst.go{animation:burst .42s ease;}
-  @keyframes burst{0%{transform:translate(-50%,-50%) scale(0); opacity:0;}30%{transform:translate(-50%,-50%) scale(1.35); opacity:1;}100%{transform:translate(-50%,-50%) scale(1); opacity:0;}}
+    45%{transform:translate(-50%,-50%) scale(1.4); box-shadow:0 0 0 7px rgba(255,255,255,.55),0 3px 0 rgba(80,55,15,.3);}
+    100%{transform:translate(-50%,-50%) scale(1.12); box-shadow:0 0 0 3px rgba(255,255,255,.75),0 3px 0 rgba(80,55,15,.3);}}
 
   .beat-hud{position:absolute; top:2.5%; left:50%; transform:translateX(-50%); z-index:5; display:flex; align-items:center; gap:14px;
     background:rgba(58,47,107,.7); padding:6px 18px 6px 10px; border-radius:999px; border:3px solid #fff; box-shadow:0 4px 0 var(--shadow);}
@@ -252,28 +185,21 @@
   .score-label{font-weight:800; font-size:clamp(11px,1.6vmin,15px); color:var(--ink-soft);}
   .score-num{font-family:"Mochiy Pop One"; font-size:clamp(26px,4.5vmin,46px); color:var(--red-deep); line-height:1;}
 
-  .btn-stack{flex:1; width:100%; display:flex; flex-direction:column; gap:.9vh; margin-top:.3vh;}
   .zure-btn{
-    flex:1; width:100%;
+    flex:1; width:100%; margin-top:.4vh;
     background:radial-gradient(circle at 50% 28%,#ff8a8a 0%,#ff5a5a 45%,#d22b2b 100%);
-    border:6px solid #fff; border-radius:26px; color:#fff;
+    border:6px solid #fff; border-radius:28px; color:#fff;
     font-family:"Mochiy Pop One"; cursor:pointer; position:relative; overflow:hidden;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
-    box-shadow:0 10px 0 #9c1f1f, inset 0 8px 16px rgba(255,255,255,.55), inset 0 -14px 22px rgba(0,0,0,.28);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+    box-shadow:0 12px 0 #9c1f1f, inset 0 8px 16px rgba(255,255,255,.55), inset 0 -14px 22px rgba(0,0,0,.28);
     transition:transform .06s ease, box-shadow .06s ease;
     text-shadow:0 3px 0 #9c1f1f, 0 5px 8px rgba(0,0,0,.3);
   }
-  .zure-btn:active,.zure-btn.squish{transform:translateY(7px) scale(.985); box-shadow:0 3px 0 #9c1f1f, inset 0 8px 16px rgba(255,255,255,.5), inset 0 -10px 18px rgba(0,0,0,.3);}
+  .zure-btn:active,.zure-btn.squish{transform:translateY(8px) scale(.985); box-shadow:0 3px 0 #9c1f1f, inset 0 8px 16px rgba(255,255,255,.5), inset 0 -10px 18px rgba(0,0,0,.3);}
   .zure-btn:focus-visible{outline:6px solid var(--ink); outline-offset:4px;}
-  .zure-btn.slow{
-    background:radial-gradient(circle at 50% 28%,#9ec0ff 0%,#5b7fe0 45%,#2f49b0 100%);
-    box-shadow:0 10px 0 #213a8c, inset 0 8px 16px rgba(255,255,255,.55), inset 0 -14px 22px rgba(0,0,0,.28);
-    text-shadow:0 3px 0 #213a8c, 0 5px 8px rgba(0,0,0,.3);
-  }
-  .zure-btn.slow:active,.zure-btn.slow.squish{box-shadow:0 3px 0 #213a8c, inset 0 8px 16px rgba(255,255,255,.5), inset 0 -10px 18px rgba(0,0,0,.3);}
-  .zb-big{font-size:clamp(24px,4.6vmin,50px); line-height:1;}
-  .zb-icon{font-size:clamp(22px,3.8vmin,42px); line-height:1;}
-  .zb-sub{font-size:clamp(10px,1.55vmin,15px); background:rgba(0,0,0,.22); padding:3px 12px; border-radius:999px;}
+  .zb-big{font-size:clamp(34px,6.2vmin,64px); line-height:1;}
+  .zb-icon{font-size:clamp(30px,5.2vmin,54px); line-height:1;}
+  .zb-sub{font-size:clamp(11px,1.7vmin,17px); background:rgba(0,0,0,.22); padding:3px 14px; border-radius:999px;}
   .zb-shine{position:absolute; top:-30%; left:-25%; width:55%; height:160%; background:linear-gradient(120deg,rgba(255,255,255,.45),transparent); transform:rotate(18deg); pointer-events:none;}
 
   .quit-btn{width:100%; background:linear-gradient(180deg,#b7add9,#8f83c0); font-size:clamp(12px,1.8vmin,17px); padding:8px; border-radius:16px;}
@@ -344,7 +270,7 @@
     <div class="title-inner">
       <h1 class="game-logo"><span class="logo-mushroom">👦</span> ぴったり ウォーク！</h1>
       <p class="subtitle">せんせいと いっしょに、リズムよく あるこう！</p>
-      <p class="howto">🎵 メトロノームの おとに あわせて、<b>はやすぎず・おそすぎず</b> いっていの ペースで あるいてね。男の子は、1ぱく ごとに すごろくの <b>マス</b> を ひとつずつ すすむよ。せんせいは ペースが はやいと <b>「はやい！」</b>、おそいと <b>「おそい！」</b> を おしてね。</p>
+      <p class="howto">🎵 メトロノームの おとに あわせて、<b>はやすぎず・おそすぎず</b> いっていの ペースで あるいてね。1ぱく ごとに すごろくの <b>マス</b> が ひとつずつ ぴかっと 点いて、さいごは ぜんぶ 点くよ。せんせいは ペースが ズレたら <b>「ズレた！」</b> を おしてね。ズレた マスは 点かないよ。</p>
       <p class="level-prompt">レベルを えらんでね</p>
       <div class="levels" id="levels"></div>
     </div>
@@ -361,33 +287,7 @@
         <span class="beat-text">メトロノーム</span>
         <span class="beat-ring" id="beatRing"></span>
       </div>
-      <div class="walker" id="walker">
-        <div class="facing" id="facing">
-          <div class="bob-shake" id="bobShake">
-            <div class="walker-bob" id="walkerBob">
-              <div class="boy" id="boy">
-                <div class="boy-arm back"></div>
-                <div class="boy-leg back"></div>
-                <div class="boy-leg front"></div>
-                <div class="boy-shirt"></div>
-                <div class="boy-body"><span class="strap s1"></span><span class="strap s2"></span><span class="btn b1"></span><span class="btn b2"></span></div>
-                <div class="boy-arm front"></div>
-                <div class="boy-head">
-                  <div class="boy-ear"></div>
-                  <div class="boy-eye left"></div>
-                  <div class="boy-eye right"></div>
-                  <div class="boy-mouth"></div>
-                </div>
-                <div class="boy-cap"></div>
-                <div class="boy-brim"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="hit-burst" id="hitBurst">💥</div>
-        <div class="walker-shadow" id="walkerShadow"></div>
-      </div>
-      <div class="child-hint">おとに あわせて、マスを ひとつずつ すすもう！</div>
+      <div class="child-hint">おとに あわせて、マスを ひとつずつ ぴかっと つけよう！</div>
     </div>
     <aside class="teacher-area">
       <div class="round-badge" id="roundBadge">1かいめ / 5かい</div>
@@ -400,20 +300,12 @@
         <div class="score-label">ズレた かいすう</div>
         <div class="score-num" id="scoreNum">0</div>
       </div>
-      <div class="btn-stack">
-        <button class="zure-btn fast" id="btnFast" aria-label="はやすぎる ときに おす">
-          <span class="zb-shine"></span>
-          <span class="zb-icon">⏩</span>
-          <span class="zb-big">はやい！</span>
-          <span class="zb-sub">まえの トゲに ささる</span>
-        </button>
-        <button class="zure-btn slow" id="btnSlow" aria-label="おそすぎる ときに おす">
-          <span class="zb-shine"></span>
-          <span class="zb-icon">🐢</span>
-          <span class="zb-big">おそい！</span>
-          <span class="zb-sub">うしろの トゲに ささる</span>
-        </button>
-      </div>
+      <button class="zure-btn" id="btnZure" aria-label="ペースが ズレた ときに おす">
+        <span class="zb-shine"></span>
+        <span class="zb-icon">🚩</span>
+        <span class="zb-big">ズレた！</span>
+        <span class="zb-sub">はやい・おそい どちらでも</span>
+      </button>
       <button class="glossy-btn quit-btn" id="quitBtn">やめる</button>
     </aside>
   </section>
@@ -596,7 +488,7 @@ function startScheduler(){
       tick(metTime);
       // メトロノームの 拍 に あわせて、男の子が つぎの マスへ ホップ
       (function(t, idx){
-        setTimeout(function(){ if(running){ moveBoyToTile(idx); } }, Math.max(0, (t - actx.currentTime) * 1000));
+        setTimeout(function(){ if(running){ lightTile(idx); } }, Math.max(0, (t - actx.currentTime) * 1000));
       })(metTime, metBeat);
       metTime += metStep; metBeat++;
     }
@@ -622,22 +514,21 @@ function stopScheduler(){ if(schedTimer){ clearInterval(schedTimer); schedTimer=
 var level=null;
 var running=false;
 var audioStart=0;
-var pressCount=0;
+var missedCount=0;
 var session = { levelId:null, round:1, results:[] };
 
 /* DOM */
 function $(id){ return document.getElementById(id); }
 var elTitle=$("title"), elGame=$("game"), elResult=$("result");
-var elWalker=$("walker"), elTimerNum=$("timerNum"), elTimerFill=$("timerFill");
+var elTimerNum=$("timerNum"), elTimerFill=$("timerFill");
 var elScore=$("scoreNum"), elRound=$("roundBadge");
-var elBtnFast=$("btnFast"), elBtnSlow=$("btnSlow");
+var elBtnZure=$("btnZure");
 var elFlash=$("flash"), elConfetti=$("confetti"), elCountdown=$("countdown");
-var elMet=$("metIcon"), elBeatRing=$("beatRing"), elBob=$("walkerBob"), elShadow=$("walkerShadow");
-var elBoy=$("boy"), elBobShake=$("bobShake"), elHitBurst=$("hitBurst");
-var elBoard=$("board"), elRoad=$("road"), elFacing=$("facing"), elBob2=$("walkerBob");
-var tiles=[];
-var SVGNS="http://www.w3.org/2000/svg";
+var elMet=$("metIcon"), elBeatRing=$("beatRing");
+var elBoard=$("board"), elRoad=$("road");
 var elTrack=$("trackArea");
+var tiles=[], tileMissed=[];
+var SVGNS="http://www.w3.org/2000/svg";
 
 /* ---- 画面切替 ---- */
 function showScreen(which){
@@ -704,30 +595,18 @@ function selectLevel(lv){
    ============================================================ */
 function startGame(){
   showScreen("game");
-  pressCount = 0;
+  missedCount = 0;
   elScore.textContent = "0";
   elRound.textContent = session.round + "かいめ / 5かい";
   elTimerNum.textContent = DURATION;
   elTimerFill.style.width = "100%";
-  elBoy.classList.remove("hurt");
-  elBobShake.classList.remove("hurt");
 
-  // リズムに合わせてアニメーション速度を設定
+  // メトロノームの 見た目（拍）の はやさ
   var beatSec = (60 / level.bpm);
-  elBoy.style.setProperty("--beat", beatSec + "s");      // からだの うわした（1歩=1ビート）
-  elBoy.style.setProperty("--cyc", (beatSec * 2) + "s"); // 足・うでの ふりこ（2歩で1周期）
-  elShadow.style.animationDuration = beatSec + "s";
   elMet.style.animationDuration = beatSec + "s";
   elBeatRing.style.animationDuration = beatSec + "s";
 
-  // マスを マスへ うつる スピード（つぎの拍より はやく つく）
-  var moveSec = Math.min(beatSec * 0.5, 0.5);
-
-  buildBoard();                       // すごろくの 道と マスを つくる
-  elWalker.style.transition = "none"; // スタート位置は すべらせず ぴたっと おく
-  moveBoyToTile(0, true);
-  void elWalker.offsetWidth;
-  elWalker.style.transition = "left " + moveSec + "s ease, top " + moveSec + "s ease";
+  buildBoard();   // すごろくの 道と マスを つくる（さいしょは ぜんぶ 消えている）
 
   // 背景の色をレベルの雰囲気に合わせる
   paintTrackMood();
@@ -801,6 +680,9 @@ function buildBoard(){
   tiles = [];
 
   var N = level.bpm;                        // マスの かず = 全歩数（BPMと同数）
+  tileMissed = new Array(N);                // ズレた マスの きろく
+  for(var k=0; k<N; k++){ tileMissed[k] = false; }
+
   var rows = (N <= 30) ? 4 : (N <= 50 ? 5 : 6);
   var cols = Math.ceil(N / rows);
   var xL = 8, xR = 92, yT = 27, yB = 90;    // 画面ぜんたいを つかう
@@ -813,7 +695,6 @@ function buildBoard(){
     var col = (row % 2 === 0) ? ci : (cols - 1 - ci);   // 行ごとに おりかえす（クネクネ）
     var x = xL + col * stepX;
     var y = yT + row * stepY;
-    var dir = (row % 2 === 0) ? "r" : "l";              // すすむ むき（右 or 左）
 
     var t = document.createElement("div");
     t.className = "tile" + (i % 2 === 1 ? " alt" : "");
@@ -822,7 +703,7 @@ function buildBoard(){
     t.style.left = x + "%";
     t.style.top  = y + "%";
     elBoard.appendChild(t);
-    tiles.push({ x:x, y:y, dir:dir, el:t });
+    tiles.push({ x:x, y:y, el:t });
   }
 
   // クネクネ道（マスの ちゅうしんを つないだ線）
@@ -837,30 +718,41 @@ function buildBoard(){
   });
 }
 
-/* 男の子を i ばんめの マスへ ホップさせる */
-function moveBoyToTile(i, noHop){
+/* 拍に合わせて i ばんめの マスを 点灯（ズレた マスは 点灯しない） */
+function lightTile(i){
   if(i < 0 || i >= tiles.length) return;
-  var t = tiles[i];
-  elWalker.style.left = t.x + "%";
-  elWalker.style.top  = t.y + "%";
-  elFacing.style.transform = (t.dir === "l") ? "scaleX(-1)" : "scaleX(1)";
-  if(!noHop){
-    elBob2.classList.remove("hop"); void elBob2.offsetWidth; elBob2.classList.add("hop");
-  }
-  t.el.classList.remove("lit"); void t.el.offsetWidth; t.el.classList.add("lit");
+  if(tileMissed[i]) return;                 // ズレた ところは ぴかっと しない
+  var t = tiles[i].el;
+  t.classList.remove("lit"); void t.offsetWidth; t.classList.add("lit");
+}
+
+/* いまの拍（＝いま 点いた マス）の ばんごう */
+function currentBeatIndex(){
+  var el = actx ? (actx.currentTime - audioStart) : 0;
+  var idx = Math.floor(el / (60 / level.bpm));
+  if(idx < 0) idx = 0;
+  if(idx >= tiles.length) idx = tiles.length - 1;
+  return idx;
 }
 
 /* ============================================================
-   先生のボタン操作（はやい / おそい）
+   先生のボタン操作（ズレた！）
    ============================================================ */
-function press(type){
+function press(){
   if(!running) return;
-  pressCount++;
-  elScore.textContent = String(pressCount);
   flashRed();
   buzzer();
-  stab(type);
-  squish(type);
+  var idx = currentBeatIndex();
+  if(!tileMissed[idx]){
+    tileMissed[idx] = true;
+    missedCount++;
+    elScore.textContent = String(missedCount);
+    var t = tiles[idx].el;
+    t.classList.remove("lit");
+    t.classList.add("missed");
+  }
+  floatZureAt(idx);
+  squish();
 }
 
 function flashRed(){
@@ -869,41 +761,20 @@ function flashRed(){
   elFlash.classList.add("go");
 }
 
-function squish(type){
-  var btn = (type === "slow") ? elBtnSlow : elBtnFast;
-  btn.classList.add("squish");
-  setTimeout(function(){ btn.classList.remove("squish"); }, 130);
+function squish(){
+  elBtnZure.classList.add("squish");
+  setTimeout(function(){ elBtnZure.classList.remove("squish"); }, 130);
 }
 
-/* ズレた ときの 演出（男の子が いてっ！となる） */
-function stab(type){
-  // 男の子が おどろいて 顔が ＞＜ になる
-  elBoy.classList.add("hurt");
-  elBobShake.classList.add("hurt");
-  // バーストとフロート文字
-  elHitBurst.classList.remove("go"); void elHitBurst.offsetWidth; elHitBurst.classList.add("go");
-
-  if(type === "slow"){
-    floatHit("おそい！", "#2f49b0");
-  } else {
-    floatHit("はやい！", "#d22b2b");
-  }
-
-  setTimeout(function(){
-    elBoy.classList.remove("hurt");
-    elBobShake.classList.remove("hurt");
-  }, 380);
-}
-
-function floatHit(text, color){
-  var rect = elWalker.getBoundingClientRect();
+/* ズレた マスの ところに 「ズレ！」を 出す */
+function floatZureAt(idx){
+  var rect = tiles[idx].el.getBoundingClientRect();
   var trackRect = elTrack.getBoundingClientRect();
   var f = document.createElement("div");
   f.className = "float-zure";
-  f.textContent = text;
-  if(color){ f.style.webkitTextStrokeColor = color; }
+  f.textContent = "ズレ！";
   f.style.left = (rect.left - trackRect.left + rect.width/2) + "px";
-  f.style.top = (rect.top - trackRect.top) + "px";
+  f.style.top  = (rect.top - trackRect.top) + "px";
   elTrack.appendChild(f);
   setTimeout(function(){ if(f.parentNode){ f.parentNode.removeChild(f); } }, 950);
 }
@@ -914,8 +785,8 @@ function floatHit(text, color){
 function endRound(){
   running = false;
   stopScheduler();
-  var total = level.bpm;                       // 全歩数 = BPMと同数
-  var success = Math.max(0, total - pressCount);
+  var total = level.bpm;                       // 全歩数 = マスの数
+  var success = Math.max(0, total - missedCount); // 点いた マスの数
   var rate = Math.round(success / total * 100);
   var cleared = rate >= level.clear;
   session.results.push({ rate:rate, cleared:cleared });
@@ -952,7 +823,7 @@ function showRoundResult(rate, cleared, total, success){
       titleHtml + starHtml +
       '<div class="res-rate-label">せいこうりつ</div>'+
       '<div class="res-rate">'+rate+'<small>%</small></div>'+
-      '<div class="res-detail">ぜんぶで '+total+'ぽ　／　ぴったり '+success+'ぽ　／　ズレ '+pressCount+'かい　（もくひょう '+level.clear+'%）</div>'+
+      '<div class="res-detail">ぜんぶで '+total+'マス　／　ぴかっと '+success+'マス　／　ズレ '+missedCount+'マス　（もくひょう '+level.clear+'%）</div>'+
       msgHtml +
       '<div class="res-buttons">'+btnHtml+'</div>'+
     '</div>';
@@ -1074,23 +945,18 @@ function toggleMute(){
    イベント登録
    ============================================================ */
 // ボタンは pointerdown で即反応（押し間違い防止＆反応の速さ重視）
-elBtnFast.addEventListener("pointerdown", function(e){ e.preventDefault(); press("fast"); });
-elBtnSlow.addEventListener("pointerdown", function(e){ e.preventDefault(); press("slow"); });
-elBtnFast.addEventListener("contextmenu", function(e){ e.preventDefault(); });
-elBtnSlow.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+elBtnZure.addEventListener("pointerdown", function(e){ e.preventDefault(); press(); });
+elBtnZure.addEventListener("contextmenu", function(e){ e.preventDefault(); });
 $("quitBtn").addEventListener("click", function(){
   goTitle();
 });
 $("muteBtnTitle").addEventListener("click", toggleMute);
 
-// キーボード／外付けスイッチの配慮：
-//   スペース・→・↑ → はやい！ ／ ←・↓ → おそい！
+// キーボード／外付けスイッチの配慮：スペース・矢印キーで「ズレた！」
 window.addEventListener("keydown", function(e){
   if(!running) return;
-  if(e.code === "Space" || e.key === " " || e.code === "ArrowRight" || e.code === "ArrowUp"){
-    e.preventDefault(); press("fast");
-  } else if(e.code === "ArrowLeft" || e.code === "ArrowDown"){
-    e.preventDefault(); press("slow");
+  if(e.code === "Space" || e.key === " " || e.code === "ArrowRight" || e.code === "ArrowUp" || e.code === "ArrowLeft" || e.code === "ArrowDown"){
+    e.preventDefault(); press();
   }
 });
 
