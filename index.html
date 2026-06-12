@@ -134,8 +134,8 @@
 
   /* すごろくの クネクネ道 と マス */
   .road{position:absolute; inset:0; z-index:1; pointer-events:none;}
-  .road-outline{stroke:#9c6b2f; stroke-width:40; stroke-linecap:round; stroke-linejoin:round;}
-  .road-top{stroke:#f2d391; stroke-width:30; stroke-linecap:round; stroke-linejoin:round;}
+  .road-outline{stroke:var(--ro,#9c6b2f); stroke-width:var(--rwo,50px); stroke-linecap:round; stroke-linejoin:round;}
+  .road-top{stroke:var(--rt,#f2d391); stroke-width:var(--rwt,40px); stroke-linecap:round; stroke-linejoin:round;}
   .board{position:absolute; inset:0; z-index:2; pointer-events:none;}
   .tile{position:absolute; width:clamp(30px,4.8vmin,50px); height:clamp(30px,4.8vmin,50px);
     transform:translate(-50%,-50%); border-radius:50%; z-index:2; opacity:.5;
@@ -145,6 +145,8 @@
   .tile.alt.lit{background:radial-gradient(circle at 50% 32%,#fff,#8fd0ff 58%,#3a9be8);}
   .tile.start{opacity:1; background:radial-gradient(circle at 50% 32%,#fff,#9be06a 58%,#4e9a25);}
   .tile.goal{opacity:1; background:radial-gradient(circle at 50% 32%,#fff,#ff8a8a 58%,#e23b3b);}
+  .tile.bonus::after{content:"⭐"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:clamp(14px,2.6vmin,28px); filter:drop-shadow(0 1px 1px rgba(0,0,0,.3));}
   .tile.missed{opacity:.95; border-color:#ececf0; background:radial-gradient(circle at 50% 32%,#fff,#bcbfc9 55%,#7e8290); animation:none;}
   .tile.missed::after{content:"✕"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
     font-family:"Mochiy Pop One"; color:#e23b3b; font-size:clamp(15px,2.6vmin,26px);}
@@ -153,10 +155,51 @@
     font-family:"Mochiy Pop One"; font-size:clamp(9px,1.4vmin,13px); color:#fff; background:rgba(58,47,107,.7);
     border-radius:999px; padding:1px 8px; text-shadow:0 1px 1px rgba(0,0,0,.4);}
   @keyframes wave{0%,100%{transform:translateX(-50%) rotate(-5deg);}50%{transform:translateX(-50%) rotate(7deg);}}
-  .tile.lit{animation:tileLit .42s ease forwards;}
+  .tile.lit{animation:tileLit .42s ease forwards, glowPulse 2s ease-in-out .55s infinite;}
   @keyframes tileLit{0%{transform:translate(-50%,-50%) scale(1);}
     45%{transform:translate(-50%,-50%) scale(1.4); box-shadow:0 0 0 7px rgba(255,255,255,.55),0 3px 0 rgba(80,55,15,.3);}
     100%{transform:translate(-50%,-50%) scale(1.12); box-shadow:0 0 0 3px rgba(255,255,255,.75),0 3px 0 rgba(80,55,15,.3);}}
+  @keyframes glowPulse{0%,100%{box-shadow:0 0 0 3px rgba(255,255,255,.75),0 0 10px 2px rgba(255,240,160,.5),0 3px 0 rgba(80,55,15,.3);}
+    50%{box-shadow:0 0 0 3px rgba(255,255,255,.95),0 0 22px 9px rgba(255,240,160,.85),0 3px 0 rgba(80,55,15,.3);}}
+
+  /* ひかりの たま（道を ながれる 光） */
+  .runner{position:absolute; width:clamp(14px,2.4vmin,26px); height:clamp(14px,2.4vmin,26px); border-radius:50%;
+    transform:translate(-50%,-50%); z-index:3; opacity:0; pointer-events:none;
+    background:radial-gradient(circle,#fff 0%,#ffe98a 55%,rgba(255,217,77,0) 75%);
+    box-shadow:0 0 16px 7px rgba(255,232,130,.85);}
+  .runner.on{opacity:1;}
+
+  /* 道ばたの かざり */
+  .deco-emoji{position:absolute; transform:translate(-50%,-50%); z-index:0;
+    font-size:clamp(26px,4.6vmin,52px); filter:drop-shadow(0 3px 3px rgba(0,0,0,.25)); opacity:.92;
+    animation:decoFloat 3.4s ease-in-out infinite;}
+  @keyframes decoFloat{0%,100%{transform:translate(-50%,-50%) translateY(0);}50%{transform:translate(-50%,-50%) translateY(-8px);}}
+
+  /* おうえん キャラ */
+  .buddy{position:absolute; top:2%; left:1.5%; z-index:6; display:flex; align-items:flex-start; gap:6px;}
+  .buddy-face{font-size:clamp(36px,6.4vmin,68px); line-height:1; filter:drop-shadow(0 4px 4px rgba(0,0,0,.3));
+    animation:buddyBob 1s ease-in-out infinite; transform-origin:bottom center;}
+  @keyframes buddyBob{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-9%) rotate(4deg);}}
+  .buddy.shock .buddy-face{animation:buddyShake .45s ease;}
+  @keyframes buddyShake{0%,100%{transform:translateX(0);}20%{transform:translateX(-7px) rotate(-8deg);}40%{transform:translateX(7px) rotate(8deg);}60%{transform:translateX(-5px);}80%{transform:translateX(5px);}}
+  .buddy-bubble{font-family:"Mochiy Pop One"; font-size:clamp(11px,1.7vmin,17px); color:var(--ink); background:#fff;
+    border:2px solid #fff; border-radius:14px; padding:4px 12px; box-shadow:0 3px 0 var(--shadow); margin-top:4px;
+    opacity:0; transform:scale(.6); transform-origin:left center; transition:all .18s ease; white-space:nowrap;}
+  .buddy-bubble.show{opacity:1; transform:scale(1);}
+
+  /* 花火 */
+  .fw-p{position:absolute; width:10px; height:10px; border-radius:50%; z-index:7; pointer-events:none;
+    transform:translate(-50%,-50%); animation:fwFly .95s ease-out forwards; box-shadow:0 0 8px 2px rgba(255,255,255,.5);}
+  @keyframes fwFly{0%{transform:translate(-50%,-50%) scale(1); opacity:1;}
+    100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.25); opacity:0;}}
+
+  /* 虹 */
+  .rainbow-wrap{position:absolute; left:50%; bottom:14%; transform:translateX(-50%); z-index:6; pointer-events:none;
+    width:min(70vmin,640px); height:min(35vmin,320px); overflow:hidden; animation:rbIn .8s ease both;}
+  .rainbow{width:100%; height:200%; border-radius:50%; opacity:.92;
+    box-shadow:inset 0 0 0 1.2vmin #ff5a5a, inset 0 0 0 2.4vmin #ff9a3c, inset 0 0 0 3.6vmin #ffd34d,
+               inset 0 0 0 4.8vmin #7bd14a, inset 0 0 0 6vmin #5ec4ff, inset 0 0 0 7.2vmin #a05bff;}
+  @keyframes rbIn{from{opacity:0; transform:translateX(-50%) translateY(40px);}to{opacity:1; transform:translateX(-50%) translateY(0);}}
 
   .beat-hud{position:absolute; top:2.5%; left:50%; transform:translateX(-50%); z-index:5; display:flex; align-items:center; gap:14px;
     background:rgba(58,47,107,.7); padding:6px 18px 6px 10px; border-radius:999px; border:3px solid #fff; box-shadow:0 4px 0 var(--shadow);}
@@ -166,9 +209,9 @@
   .beat-ring{width:clamp(16px,2.6vmin,26px); height:clamp(16px,2.6vmin,26px); border-radius:50%; background:var(--sun); box-shadow:0 0 0 3px #fff; animation:ringPulse .857s ease-in-out infinite;}
   @keyframes ringPulse{0%,100%{transform:scale(.6); opacity:.6;}50%{transform:scale(1.15); opacity:1;}}
 
-  .child-hint{position:absolute; bottom:2.5%; left:50%; transform:translateX(-50%); z-index:5;
-    font-family:"Mochiy Pop One"; font-size:clamp(12px,2vmin,20px); color:#fff;
-    background:rgba(58,47,107,.55); padding:5px 18px; border-radius:999px; text-shadow:0 1px 2px rgba(0,0,0,.4);}
+  .child-hint{position:absolute; bottom:2%; left:50%; transform:translateX(-50%); z-index:5; white-space:nowrap;
+    font-family:"Mochiy Pop One"; font-size:clamp(11px,1.8vmin,18px); color:#fff;
+    background:rgba(58,47,107,.55); padding:4px 16px; border-radius:999px; text-shadow:0 1px 2px rgba(0,0,0,.4);}
 
   /* teacher panel */
   .teacher-area{background:linear-gradient(180deg,#fff7e6,#ffe7c2); display:flex; flex-direction:column; align-items:center;
@@ -184,6 +227,7 @@
   .score-box{text-align:center;}
   .score-label{font-weight:800; font-size:clamp(11px,1.6vmin,15px); color:var(--ink-soft);}
   .score-num{font-family:"Mochiy Pop One"; font-size:clamp(26px,4.5vmin,46px); color:var(--red-deep); line-height:1;}
+  .score-num.star{color:#e8a200;}
 
   .zure-btn{
     flex:1; width:100%; margin-top:.4vh;
@@ -282,12 +326,17 @@
       <div class="track-deco" id="trackDeco"></div>
       <svg class="road" id="road" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
       <div class="board" id="board"></div>
+      <div class="runner" id="runner"></div>
+      <div class="buddy" id="buddy">
+        <div class="buddy-face" id="buddyFace">🐰</div>
+        <div class="buddy-bubble" id="buddyBubble">いっしょに がんばろう！</div>
+      </div>
       <div class="beat-hud">
         <span class="met-icon" id="metIcon">🎵</span>
         <span class="beat-text">メトロノーム</span>
         <span class="beat-ring" id="beatRing"></span>
       </div>
-      <div class="child-hint">おとに あわせて、マスを ひとつずつ ぴかっと つけよう！</div>
+      <div class="child-hint">おとに あわせて マスを ぴかっと つけよう！</div>
     </div>
     <aside class="teacher-area">
       <div class="round-badge" id="roundBadge">1かいめ / 5かい</div>
@@ -299,6 +348,10 @@
       <div class="score-box">
         <div class="score-label">ズレた かいすう</div>
         <div class="score-num" id="scoreNum">0</div>
+      </div>
+      <div class="score-box">
+        <div class="score-label">あつめた スター ⭐</div>
+        <div class="score-num star" id="starNum">0</div>
       </div>
       <button class="zure-btn" id="btnZure" aria-label="ペースが ズレた ときに おす">
         <span class="zb-shine"></span>
@@ -328,21 +381,21 @@ var DURATION = 60; // 1セッション = 60びょう
 /* ---- レベル設定 ---- */
 var LEVELS = [
   { id:1, badge:"レベル1", name:"とってもかんたん", emoji:"😊", color:"linear-gradient(180deg,#6fd0ff,#1f8ad6)",
-    bpm:70, clear:60, speedLabel:"ちょっと はやめ", mood:"のんびり",
+    bpm:50, clear:60, speedLabel:"ゆっくり", mood:"のんびり",
     bgm:{ tempo:104, leadType:"triangle", bassType:"square",
       lead:[{n:"E5",d:1},{n:"G5",d:1},{n:"C6",d:2},{n:"G5",d:1},{n:"E5",d:1},{n:"D5",d:2},
             {n:"C5",d:1},{n:"E5",d:1},{n:"G5",d:2},{n:"A5",d:1},{n:"G5",d:1},{n:"E5",d:2}],
       bass:[{n:"C3",d:2},{n:"C3",d:2},{n:"G2",d:2},{n:"G2",d:2},{n:"F2",d:2},{n:"F2",d:2},{n:"G2",d:2},{n:"G2",d:2}] } },
 
   { id:2, badge:"レベル2", name:"かんたん", emoji:"🎈", color:"linear-gradient(180deg,#8be05a,#3f8a1f)",
-    bpm:60, clear:70, speedLabel:"きほん", mood:"たのしい",
+    bpm:40, clear:70, speedLabel:"とても ゆっくり", mood:"たのしい",
     bgm:{ tempo:122, leadType:"square", bassType:"square",
       lead:[{n:"G5",d:.5},{n:"E5",d:.5},{n:"G5",d:.5},{n:"A5",d:.5},{n:"G5",d:1},{n:"E5",d:1},
             {n:"F5",d:.5},{n:"D5",d:.5},{n:"F5",d:.5},{n:"G5",d:.5},{n:"E5",d:1},{n:"C5",d:1}],
       bass:[{n:"C3",d:1},{n:"G2",d:1},{n:"A2",d:1},{n:"G2",d:1},{n:"F2",d:1},{n:"C3",d:1},{n:"G2",d:1},{n:"G2",d:1}] } },
 
   { id:3, badge:"レベル3", name:"ふつう（もくひょう）", emoji:"⭐", color:"linear-gradient(180deg,#ffd34d,#e89400)",
-    bpm:50, clear:80, speedLabel:"ゆっくり", mood:"ワクワク",
+    bpm:30, clear:80, speedLabel:"すごく ゆっくり", mood:"ワクワク",
     bgm:{ tempo:132, leadType:"square", bassType:"square",
       lead:[{n:"C5",d:.5},{n:"E5",d:.5},{n:"G5",d:.5},{n:"C6",d:.5},{n:"G5",d:.5},{n:"E5",d:.5},
             {n:"F5",d:.5},{n:"A5",d:.5},{n:"C6",d:.5},{n:"A5",d:.5},{n:"G5",d:.5},{n:"E5",d:.5},
@@ -351,14 +404,14 @@ var LEVELS = [
       bass:[{n:"C3",d:.5},{n:"C3",d:.5},{n:"F2",d:.5},{n:"F2",d:.5},{n:"G2",d:.5},{n:"G2",d:.5},{n:"C3",d:.5},{n:"G2",d:.5}] } },
 
   { id:4, badge:"レベル4", name:"むずかしい", emoji:"🔥", color:"linear-gradient(180deg,#ff8a4d,#d23b1f)",
-    bpm:40, clear:80, speedLabel:"とても ゆっくり", mood:"きんちょう",
+    bpm:20, clear:80, speedLabel:"ちょう ゆっくり", mood:"きんちょう",
     bgm:{ tempo:118, leadType:"square", bassType:"square",
       lead:[{n:"A4",d:1},{n:"C5",d:1},{n:"E5",d:1},{n:"A5",d:1},{n:"G5",d:.5},{n:"F5",d:.5},{n:"E5",d:1},
             {n:"A4",d:1},{n:"B4",d:1},{n:"C5",d:2},{n:"E5",d:2}],
       bass:[{n:"A2",d:1},{n:"A2",d:1},{n:"F2",d:1},{n:"F2",d:1},{n:"G2",d:1},{n:"G2",d:1},{n:"E2",d:1},{n:"E2",d:1}] } },
 
   { id:5, badge:"レベル5", name:"ゲキムズ", emoji:"💀", color:"linear-gradient(180deg,#a05bff,#5b1fb0)",
-    bpm:30, clear:90, speedLabel:"すごく ゆっくり", mood:"スリリング",
+    bpm:10, clear:90, speedLabel:"ゲキおそ（1ぷんで 10ぽ）", mood:"スリリング",
     note:"おんがくは はやいけど、メトロノームの ゆっくりを まもってね！",
     bgm:{ tempo:170, leadType:"square", bassType:"sawtooth",
       lead:[{n:"A5",d:.25},{n:"A5",d:.25},{n:"E5",d:.25},{n:"A5",d:.25},{n:"C6",d:.25},{n:"A5",d:.25},{n:"E5",d:.25},{n:"A5",d:.25},
@@ -368,6 +421,20 @@ var LEVELS = [
       bass:[{n:"A2",d:.5},{n:"A2",d:.5},{n:"A2",d:.5},{n:"A2",d:.5},{n:"G2",d:.5},{n:"G2",d:.5},{n:"G2",d:.5},{n:"G2",d:.5},
             {n:"F2",d:.5},{n:"F2",d:.5},{n:"F2",d:.5},{n:"F2",d:.5},{n:"E2",d:.5},{n:"E2",d:.5},{n:"E2",d:.5},{n:"E2",d:.5}] } }
 ];
+
+/* ---- レベルごとの 世界観テーマ ---- */
+var THEMES = {
+  1:{ bg:"linear-gradient(180deg,#cdf5ae,#7ecb4a)", ro:"#9c6b2f", rt:"#f2d391",
+      deco:["🌼","🌳","🦋","🐞","🍀","🌷"], buddy:"🐰" },
+  2:{ bg:"linear-gradient(180deg,#aee9ff,#3f9ad6)", ro:"#b8893a", rt:"#ffe9b0",
+      deco:["🐠","🐚","🌊","🐙","⛵","🐡"], buddy:"🐬" },
+  3:{ bg:"linear-gradient(180deg,#e8f5ff,#8fc3f5)", ro:"#9fb3dd", rt:"#ffffff",
+      deco:["☁️","🎈","🪁","🌤️","🕊️","🌈"], buddy:"🐦" },
+  4:{ bg:"linear-gradient(180deg,#7a4030,#3a1410)", ro:"#3c3c46", rt:"#9a9aa8",
+      deco:["🌋","🔥","🪨","💥","🦖","🌶️"], buddy:"🐲" },
+  5:{ bg:"linear-gradient(180deg,#3a2a6a,#150b33)", ro:"#4a3d85", rt:"#8d7ad0",
+      deco:["🪐","⭐","🚀","🌙","👾","☄️"], buddy:"👾" }
+};
 
 /* ============================================================
    Web Audio エンジン
@@ -463,6 +530,22 @@ function softEnd(){
   tone(n2f("C6"), t+0.44, 0.5, "triangle", 0.3, sfxGain);
 }
 
+/* コイン音（ボーナスマス ⭐） */
+function coin(){
+  if(!actx) return;
+  var t = actx.currentTime + 0.01;
+  tone(n2f("B5"), t, 0.09, "square", 0.3, sfxGain);
+  tone(n2f("E6"), t + 0.085, 0.4, "square", 0.3, sfxGain);
+}
+
+/* ゴールの ジングル */
+function goalJingle(){
+  if(!actx) return;
+  var t = actx.currentTime + 0.02;
+  var seq = ["C5","E5","G5","C6","E6","G6"];
+  for(var i=0; i<seq.length; i++){ tone(n2f(seq[i]), t + i*0.09, 0.35, "square", 0.3, sfxGain); }
+}
+
 /* カウントダウン用ビープ */
 function beep(hi){
   if(!actx) return;
@@ -528,6 +611,9 @@ var elMet=$("metIcon"), elBeatRing=$("beatRing");
 var elBoard=$("board"), elRoad=$("road");
 var elTrack=$("trackArea");
 var tiles=[], tileMissed=[];
+var starsGot=0;
+var elRunner=$("runner"), elStarNum=$("starNum");
+var buddyTimer=null, buddyFaceTimer=null;
 var SVGNS="http://www.w3.org/2000/svg";
 
 /* ---- 画面切替 ---- */
@@ -597,6 +683,11 @@ function startGame(){
   showScreen("game");
   missedCount = 0;
   elScore.textContent = "0";
+  starsGot = 0;
+  elStarNum.textContent = "0";
+  $("buddyBubble").classList.remove("show");
+  var olds = elTrack.querySelectorAll(".fw-p,.rainbow-wrap");
+  for(var oi=0; oi<olds.length; oi++){ if(olds[oi].parentNode){ olds[oi].parentNode.removeChild(olds[oi]); } }
   elRound.textContent = session.round + "かいめ / 5かい";
   elTimerNum.textContent = DURATION;
   elTimerFill.style.width = "100%";
@@ -622,18 +713,27 @@ function startGame(){
 }
 
 function paintTrackMood(){
-  // ボードの 草はらの 色を レベルの ふんいきに あわせる（4・5は すこし くらめ）
-  if(level.id === 4){
-    elTrack.style.background = "linear-gradient(180deg,#ffcf9a,#e89a55 100%)";
-  } else if(level.id === 5){
-    elTrack.style.background = "linear-gradient(180deg,#6a59b0,#33215f 100%)";
-  } else if(level.id === 1){
-    elTrack.style.background = "linear-gradient(180deg,#bdeaff,#7fc7f5 100%)";
-  } else if(level.id === 2){
-    elTrack.style.background = "linear-gradient(180deg,#c8f3a8,#7ecb4a 100%)";
-  } else {
-    elTrack.style.background = "linear-gradient(180deg,#fff0b0,#ffd86a 100%)";
+  var th = THEMES[level.id] || THEMES[1];
+  elTrack.style.background = th.bg;
+  elRoad.style.setProperty("--ro", th.ro);
+  elRoad.style.setProperty("--rt", th.rt);
+
+  // 道ばたの かざり（テーマの 絵文字）
+  var deco = $("trackDeco");
+  deco.innerHTML = "";
+  var spots = [[3,8],[22,9],[68,8],[96,10],[2.5,46],[97.5,42],[8,96],[92,96],[97,72]];
+  for(var i=0; i<spots.length; i++){
+    var d = document.createElement("div");
+    d.className = "deco-emoji";
+    d.textContent = th.deco[i % th.deco.length];
+    d.style.left = spots[i][0] + "%";
+    d.style.top  = spots[i][1] + "%";
+    d.style.animationDelay = (i * 0.35) + "s";
+    deco.appendChild(d);
   }
+
+  // おうえん キャラも テーマに あわせる
+  $("buddyFace").textContent = th.buddy;
 }
 
 /* カウントダウン 3-2-1-スタート！ */
@@ -683,9 +783,20 @@ function buildBoard(){
   tileMissed = new Array(N);                // ズレた マスの きろく
   for(var k=0; k<N; k++){ tileMissed[k] = false; }
 
-  var rows = (N <= 30) ? 4 : (N <= 50 ? 5 : 6);
+  // マスの数に あわせて 行の数と マスの 大きさを かえる
+  var rows = (N <= 12) ? 2 : (N <= 24) ? 3 : (N <= 42) ? 4 : 5;
   var cols = Math.ceil(N / rows);
-  var xL = 8, xR = 92, yT = 27, yB = 90;    // 画面ぜんたいを つかう
+  var tileSize =
+    (N <= 12) ? "clamp(58px,9.5vmin,100px)" :
+    (N <= 24) ? "clamp(48px,7.8vmin,82px)"  :
+    (N <= 36) ? "clamp(38px,6.2vmin,66px)"  :
+                "clamp(32px,5vmin,54px)";
+  var roadW = (N <= 12) ? 64 : (N <= 24) ? 54 : (N <= 36) ? 46 : 40;
+  elRoad.style.setProperty("--rwo", (roadW + 10) + "px");
+  elRoad.style.setProperty("--rwt", roadW + "px");
+
+  // 下は ヒント文と かさならないように あける
+  var xL = 8, xR = 92, yT = 22, yB = 82;
   var stepX = cols > 1 ? (xR - xL) / (cols - 1) : 0;
   var stepY = rows > 1 ? (yB - yT) / (rows - 1) : 0;
 
@@ -696,34 +807,129 @@ function buildBoard(){
     var x = xL + col * stepX;
     var y = yT + row * stepY;
 
+    var isBonus = (i > 0 && i < N - 1 && i % 5 === 0);   // 5マスごとの ボーナス ⭐
     var t = document.createElement("div");
-    t.className = "tile" + (i % 2 === 1 ? " alt" : "");
+    t.className = "tile" + (i % 2 === 1 ? " alt" : "") + (isBonus ? " bonus" : "");
     if(i === 0){ t.className = "tile start"; t.innerHTML = '<span class="tile-label">スタート</span>'; }
     if(i === N - 1){ t.className = "tile goal"; t.innerHTML = '<span class="tile-icon">🏁</span><span class="tile-label">ゴール</span>'; }
     t.style.left = x + "%";
     t.style.top  = y + "%";
+    t.style.width = tileSize;
+    t.style.height = tileSize;
     elBoard.appendChild(t);
-    tiles.push({ x:x, y:y, el:t });
+    tiles.push({ x:x, y:y, el:t, bonus:isBonus, litDone:false });
   }
 
-  // クネクネ道（マスの ちゅうしんを つないだ線）
-  var pts = tiles.map(function(t){ return t.x + "," + t.y; }).join(" ");
+  drawRoad();
+
+  // ひかりの たま を スタートに もどす
+  var beatSec = 60 / level.bpm;
+  var mv = Math.min(beatSec * 0.45, 0.6);
+  elRunner.classList.remove("on");
+  elRunner.style.transition = "none";
+  elRunner.style.left = tiles[0].x + "%";
+  elRunner.style.top  = tiles[0].y + "%";
+  void elRunner.offsetWidth;
+  elRunner.style.transition = "left " + mv + "s ease, top " + mv + "s ease";
+}
+
+/* クネクネ道を 画面サイズに あわせて ピクセルで 描く（ズレない） */
+function drawRoad(){
+  if(!tiles.length) return;
+  while(elRoad.firstChild){ elRoad.removeChild(elRoad.firstChild); }
+  var w = elTrack.clientWidth, h = elTrack.clientHeight;
+  if(!w || !h) return;
+  elRoad.setAttribute("viewBox", "0 0 " + w + " " + h);
+  elRoad.setAttribute("preserveAspectRatio", "none");
+  var pts = tiles.map(function(t){ return (t.x/100*w).toFixed(1) + "," + (t.y/100*h).toFixed(1); }).join(" ");
   ["road-outline","road-top"].forEach(function(cls){
     var pl = document.createElementNS(SVGNS, "polyline");
     pl.setAttribute("points", pts);
     pl.setAttribute("class", cls);
     pl.setAttribute("fill", "none");
-    pl.setAttribute("vector-effect", "non-scaling-stroke");
     elRoad.appendChild(pl);
   });
 }
+window.addEventListener("resize", drawRoad);
 
 /* 拍に合わせて i ばんめの マスを 点灯（ズレた マスは 点灯しない） */
 function lightTile(i){
   if(i < 0 || i >= tiles.length) return;
+  moveRunner(i);                            // 光の たまが 道を ながれて すすむ
   if(tileMissed[i]) return;                 // ズレた ところは ぴかっと しない
-  var t = tiles[i].el;
-  t.classList.remove("lit"); void t.offsetWidth; t.classList.add("lit");
+  var tl = tiles[i];
+  tl.el.classList.remove("lit"); void tl.el.offsetWidth; tl.el.classList.add("lit");
+  tl.litDone = true;
+  if(tl.bonus){
+    starsGot++;
+    elStarNum.textContent = String(starsGot);
+    coin();
+    buddySay("⭐ ゲット！", 1200);
+  }
+  if(i === tiles.length - 1){ goalCelebrate(); }
+}
+
+function moveRunner(i){
+  elRunner.classList.add("on");
+  elRunner.style.left = tiles[i].x + "%";
+  elRunner.style.top  = tiles[i].y + "%";
+}
+
+/* おうえん キャラ */
+function buddySay(text, ms){
+  var b = $("buddyBubble");
+  b.textContent = text;
+  b.classList.add("show");
+  if(buddyTimer) clearTimeout(buddyTimer);
+  buddyTimer = setTimeout(function(){ b.classList.remove("show"); }, ms || 1500);
+}
+function buddyShock(){
+  var bd = $("buddy"), f = $("buddyFace");
+  bd.classList.remove("shock"); void bd.offsetWidth; bd.classList.add("shock");
+  f.textContent = "😲";
+  buddySay("あっ！", 900);
+  if(buddyFaceTimer) clearTimeout(buddyFaceTimer);
+  buddyFaceTimer = setTimeout(function(){ f.textContent = (THEMES[level.id] || THEMES[1]).buddy; }, 700);
+}
+
+/* ゴール！ 花火と 虹で おいわい */
+function goalCelebrate(){
+  goalJingle();
+  fireworks();
+  showRainbow();
+  launchConfetti(50);
+  buddySay("やったー！！", 2600);
+}
+function fireworks(){
+  var spots = [[30,32],[65,28],[48,52],[80,50],[18,55]];
+  var colors = ["#ffd34d","#ff5a5a","#7bd14a","#5ec4ff","#a05bff","#ff8a4d","#fff"];
+  spots.forEach(function(sp, si){
+    setTimeout(function(){
+      for(var i=0; i<14; i++){
+        var pp = document.createElement("div");
+        pp.className = "fw-p";
+        var ang = (i / 14) * Math.PI * 2;
+        var dist = 60 + Math.random() * 80;
+        pp.style.setProperty("--dx", (Math.cos(ang) * dist) + "px");
+        pp.style.setProperty("--dy", (Math.sin(ang) * dist) + "px");
+        pp.style.left = sp[0] + "%";
+        pp.style.top  = sp[1] + "%";
+        pp.style.background = colors[(si + i) % colors.length];
+        elTrack.appendChild(pp);
+        (function(node){ setTimeout(function(){ if(node.parentNode){ node.parentNode.removeChild(node); } }, 1100); })(pp);
+      }
+      if(actx){ tone(700 + Math.random()*500, actx.currentTime + 0.01, 0.25, "triangle", 0.18, sfxGain); }
+    }, si * 280);
+  });
+}
+function showRainbow(){
+  var wrap = document.createElement("div");
+  wrap.className = "rainbow-wrap";
+  var r = document.createElement("div");
+  r.className = "rainbow";
+  wrap.appendChild(r);
+  elTrack.appendChild(wrap);
+  setTimeout(function(){ if(wrap.parentNode){ wrap.parentNode.removeChild(wrap); } }, 6000);
 }
 
 /* いまの拍（＝いま 点いた マス）の ばんごう */
@@ -750,8 +956,13 @@ function press(){
     var t = tiles[idx].el;
     t.classList.remove("lit");
     t.classList.add("missed");
+    if(tiles[idx].bonus && tiles[idx].litDone){
+      starsGot = Math.max(0, starsGot - 1);   // ⭐も とりけし
+      elStarNum.textContent = String(starsGot);
+    }
   }
   floatZureAt(idx);
+  buddyShock();
   squish();
 }
 
@@ -824,6 +1035,7 @@ function showRoundResult(rate, cleared, total, success){
       '<div class="res-rate-label">せいこうりつ</div>'+
       '<div class="res-rate">'+rate+'<small>%</small></div>'+
       '<div class="res-detail">ぜんぶで '+total+'マス　／　ぴかっと '+success+'マス　／　ズレ '+missedCount+'マス　（もくひょう '+level.clear+'%）</div>'+
+      '<div class="res-detail">あつめた スター：⭐ × '+starsGot+'</div>'+
       msgHtml +
       '<div class="res-buttons">'+btnHtml+'</div>'+
     '</div>';
