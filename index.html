@@ -145,7 +145,7 @@
   .tile.alt.lit{background:radial-gradient(circle at 50% 32%,#fff,#8fd0ff 58%,#3a9be8);}
   .tile.start{opacity:1; background:radial-gradient(circle at 50% 32%,#fff,#9be06a 58%,#4e9a25);}
   .tile.goal{opacity:1; background:radial-gradient(circle at 50% 32%,#fff,#ff8a8a 58%,#e23b3b);}
-  .tile.bonus::after{content:"⭐"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  .tile.bonus::after{content:"🪙"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
     font-size:clamp(14px,2.6vmin,28px); filter:drop-shadow(0 1px 1px rgba(0,0,0,.3));}
   .tile.missed{opacity:.95; border-color:#ececf0; background:radial-gradient(circle at 50% 32%,#fff,#bcbfc9 55%,#7e8290); animation:none;}
   .tile.missed::after{content:"✕"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
@@ -163,11 +163,13 @@
     50%{box-shadow:0 0 0 3px rgba(255,255,255,.95),0 0 22px 9px rgba(255,240,160,.85),0 3px 0 rgba(80,55,15,.3);}}
 
   /* ひかりの たま（道を ながれる 光） */
-  .runner{position:absolute; width:clamp(14px,2.4vmin,26px); height:clamp(14px,2.4vmin,26px); border-radius:50%;
+  .runner{position:absolute; width:clamp(22px,3.6vmin,40px); height:clamp(22px,3.6vmin,40px); border-radius:50%;
     transform:translate(-50%,-50%); z-index:3; opacity:0; pointer-events:none;
-    background:radial-gradient(circle,#fff 0%,#ffe98a 55%,rgba(255,217,77,0) 75%);
-    box-shadow:0 0 16px 7px rgba(255,232,130,.85);}
+    background:radial-gradient(circle,#fff 0%,#ffe98a 50%,rgba(255,217,77,0) 75%);
+    box-shadow:0 0 18px 9px rgba(255,232,130,.9), 0 0 40px 18px rgba(255,232,130,.35);
+    animation:runnerPulse .8s ease-in-out infinite;}
   .runner.on{opacity:1;}
+  @keyframes runnerPulse{0%,100%{filter:brightness(1) ;}50%{filter:brightness(1.35);}}
 
   /* 道ばたの かざり */
   .deco-emoji{position:absolute; transform:translate(-50%,-50%); z-index:0;
@@ -350,7 +352,7 @@
         <div class="score-num" id="scoreNum">0</div>
       </div>
       <div class="score-box">
-        <div class="score-label">あつめた スター ⭐</div>
+        <div class="score-label">あつめた コイン 🪙</div>
         <div class="score-num star" id="starNum">0</div>
       </div>
       <button class="zure-btn" id="btnZure" aria-label="ペースが ズレた ときに おす">
@@ -557,10 +559,11 @@ function beep(hi){
    スケジューラ（メトロノーム + BGM）
    ============================================================ */
 var schedTimer=null;
-var metTime=0, leadTime=0, bassTime=0, leadIdx=0, bassIdx=0, metBeat=0;
+var metTime=0, leadTime=0, bassTime=0, leadIdx=0, bassIdx=0, metBeat=0, gridStart=0;
 
 function startScheduler(){
   var startAt = actx.currentTime + 0.12;
+  gridStart = startAt;                      // 拍の はじまり（光の玉も これに あわせる）
   metTime = leadTime = bassTime = startAt;
   leadIdx = bassIdx = metBeat = 0;
   schedTimer = setInterval(function(){
@@ -766,8 +769,29 @@ function loop(){
   var remain = Math.max(0, Math.ceil(DURATION - el));
   elTimerNum.textContent = remain;
   elTimerFill.style.width = (100 - p*100) + "%";
+  updateRunner();
   if(el >= DURATION){ endRound(); return; }
   requestAnimationFrame(loop);
+}
+
+/* 光の玉：1拍 かけて つぎの マスへ スーッと すすみつづける
+   玉の いちが そのまま「つぎが 点くまで あと どれくらい」の めやすになる */
+function updateRunner(){
+  if(!tiles.length) return;
+  var beat = 60 / level.bpm;
+  var t = actx.currentTime - gridStart;      // 拍グリッド じょうの 時間
+  if(t < 0) t = 0;
+  var k = Math.floor(t / beat);              // いま 点いている マス
+  var frac = (t / beat) - k;                 // つぎの マスへの すすみぐあい (0〜1)
+  elRunner.classList.add("on");
+  if(k >= tiles.length - 1){
+    elRunner.style.left = tiles[tiles.length - 1].x + "%";
+    elRunner.style.top  = tiles[tiles.length - 1].y + "%";
+    return;
+  }
+  var a = tiles[k], b = tiles[k + 1];
+  elRunner.style.left = (a.x + (b.x - a.x) * frac) + "%";
+  elRunner.style.top  = (a.y + (b.y - a.y) * frac) + "%";
 }
 
 /* ============================================================
@@ -823,14 +847,9 @@ function buildBoard(){
   drawRoad();
 
   // ひかりの たま を スタートに もどす
-  var beatSec = 60 / level.bpm;
-  var mv = Math.min(beatSec * 0.45, 0.6);
   elRunner.classList.remove("on");
-  elRunner.style.transition = "none";
   elRunner.style.left = tiles[0].x + "%";
   elRunner.style.top  = tiles[0].y + "%";
-  void elRunner.offsetWidth;
-  elRunner.style.transition = "left " + mv + "s ease, top " + mv + "s ease";
 }
 
 /* クネクネ道を 画面サイズに あわせて ピクセルで 描く（ズレない） */
@@ -855,7 +874,6 @@ window.addEventListener("resize", drawRoad);
 /* 拍に合わせて i ばんめの マスを 点灯（ズレた マスは 点灯しない） */
 function lightTile(i){
   if(i < 0 || i >= tiles.length) return;
-  moveRunner(i);                            // 光の たまが 道を ながれて すすむ
   if(tileMissed[i]) return;                 // ズレた ところは ぴかっと しない
   var tl = tiles[i];
   tl.el.classList.remove("lit"); void tl.el.offsetWidth; tl.el.classList.add("lit");
@@ -864,15 +882,9 @@ function lightTile(i){
     starsGot++;
     elStarNum.textContent = String(starsGot);
     coin();
-    buddySay("⭐ ゲット！", 1200);
+    buddySay("🪙 コイン ゲット！", 1200);
   }
   if(i === tiles.length - 1){ goalCelebrate(); }
-}
-
-function moveRunner(i){
-  elRunner.classList.add("on");
-  elRunner.style.left = tiles[i].x + "%";
-  elRunner.style.top  = tiles[i].y + "%";
 }
 
 /* おうえん キャラ */
@@ -934,7 +946,7 @@ function showRainbow(){
 
 /* いまの拍（＝いま 点いた マス）の ばんごう */
 function currentBeatIndex(){
-  var el = actx ? (actx.currentTime - audioStart) : 0;
+  var el = actx ? (actx.currentTime - gridStart) : 0;
   var idx = Math.floor(el / (60 / level.bpm));
   if(idx < 0) idx = 0;
   if(idx >= tiles.length) idx = tiles.length - 1;
@@ -1035,7 +1047,7 @@ function showRoundResult(rate, cleared, total, success){
       '<div class="res-rate-label">せいこうりつ</div>'+
       '<div class="res-rate">'+rate+'<small>%</small></div>'+
       '<div class="res-detail">ぜんぶで '+total+'マス　／　ぴかっと '+success+'マス　／　ズレ '+missedCount+'マス　（もくひょう '+level.clear+'%）</div>'+
-      '<div class="res-detail">あつめた スター：⭐ × '+starsGot+'</div>'+
+      '<div class="res-detail">あつめた コイン：🪙 × '+starsGot+'</div>'+
       msgHtml +
       '<div class="res-buttons">'+btnHtml+'</div>'+
     '</div>';
