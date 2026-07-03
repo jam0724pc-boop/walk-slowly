@@ -76,6 +76,7 @@
   }
   @keyframes logoPop{0%{transform:scale(.4) rotate(-12deg); opacity:0;} 100%{transform:scale(1) rotate(-1.5deg); opacity:1;}}
   .logo-mushroom{display:inline-block; animation:bob 1.4s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
   .subtitle{
     font-weight:800; font-size:clamp(13px,2.1vmin,21px); color:#fff;
     background:rgba(58,47,107,.55); padding:6px 18px; border-radius:999px;
@@ -108,7 +109,25 @@
   .level-card:hover{transform:translateY(-6px);}
   .level-card:active{transform:translateY(3px); box-shadow:0 4px 0 var(--shadow), inset 0 4px 10px rgba(255,255,255,.5);}
   .level-card:focus-visible{outline:5px solid #fff; outline-offset:3px;}
-  .lc-shine{position:absolute; top:-30%; left:-20%; width:60%; height:160%; background:linear-gradient(120deg,rgba(255,255,255,.55),rgba(255,255,255,0)); transform:rotate(18deg); pointer-events:none;}
+  .lc-shine{position:absolute; top:-30%; left:-45%; width:60%; height:160%; background:linear-gradient(120deg,rgba(255,255,255,.55),rgba(255,255,255,0)); transform:rotate(18deg); pointer-events:none;
+    animation:shineSweep 4.2s ease-in-out infinite;}
+  @keyframes shineSweep{0%,55%{left:-45%;}90%,100%{left:125%;}}
+  .level-card:nth-child(1) .lc-shine{animation-delay:0s;}
+  .level-card:nth-child(2) .lc-shine{animation-delay:.4s;}
+  .level-card:nth-child(3) .lc-shine{animation-delay:.8s;}
+  .level-card:nth-child(4) .lc-shine{animation-delay:1.2s;}
+  .level-card:nth-child(5) .lc-shine{animation-delay:1.6s;}
+
+  /* ロゴの 1もじずつ カラフルジャンプ */
+  .logo-ch{display:inline-block; -webkit-text-stroke:6px #fff; paint-order:stroke fill;
+    text-shadow:0 6px 0 rgba(58,47,107,.95), 0 10px 14px rgba(0,0,0,.25);
+    animation:chJump 2.4s ease-in-out infinite;}
+  @keyframes chJump{0%,64%,100%{transform:translateY(0) rotate(0);}72%{transform:translateY(-16%) rotate(-5deg);}
+    80%{transform:translateY(3%) rotate(3deg);}88%{transform:translateY(0);}}
+
+  /* タイトルに うかぶ アイテム */
+  .title-float{position:absolute; z-index:1; font-size:clamp(34px,6vmin,64px); pointer-events:none;
+    filter:drop-shadow(0 4px 4px rgba(0,0,0,.25)); animation:bob 3s ease-in-out infinite;}
   .lc-badge{font-family:"Mochiy Pop One",sans-serif; font-size:clamp(13px,2vmin,20px); background:rgba(0,0,0,.22); padding:2px 12px; border-radius:999px; text-shadow:0 1px 2px rgba(0,0,0,.4);}
   .lc-emoji{font-size:clamp(34px,6vmin,60px); line-height:1; filter:drop-shadow(0 4px 4px rgba(0,0,0,.3)); margin:.2vh 0;}
   .lc-name{font-family:"Mochiy Pop One",sans-serif; font-size:clamp(13px,2vmin,21px); text-shadow:0 2px 0 rgba(0,0,0,.35); line-height:1.15;}
@@ -130,26 +149,55 @@
   #game{display:grid; grid-template-columns:3fr 1fr;}
   .track-area{position:relative; overflow:hidden; border-right:8px solid rgba(58,47,107,.25);
     background:linear-gradient(180deg,#bdf0a0 0%,#86cf52 100%);}
+  .track-area::before{content:""; position:absolute; inset:1.2vmin; border:3px dashed rgba(255,255,255,.22);
+    border-radius:22px; pointer-events:none; z-index:0;}
+  .track-area::after{content:""; position:absolute; inset:0; pointer-events:none; z-index:8;
+    box-shadow:inset 0 0 10vmin rgba(0,0,0,.16);}
   .track-deco{position:absolute; inset:0; z-index:0; pointer-events:none;}
 
   /* すごろくの クネクネ道 と マス */
   .road{position:absolute; inset:0; z-index:1; pointer-events:none;}
   .road-outline{stroke:var(--ro,#9c6b2f); stroke-width:var(--rwo,50px); stroke-linecap:round; stroke-linejoin:round;}
   .road-top{stroke:var(--rt,#f2d391); stroke-width:var(--rwt,40px); stroke-linecap:round; stroke-linejoin:round;}
+  .road-ties{stroke:rgba(0,0,0,.10); stroke-width:var(--rwt,40px); stroke-linecap:butt; stroke-linejoin:round; stroke-dasharray:5 26;}
+  .road-dash{stroke:rgba(255,255,255,.85); stroke-width:4px; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:12 18;}
   .board{position:absolute; inset:0; z-index:2; pointer-events:none;}
   .tile{position:absolute; width:clamp(30px,4.8vmin,50px); height:clamp(30px,4.8vmin,50px);
-    transform:translate(-50%,-50%); border-radius:50%; z-index:2; opacity:.5;
-    background:radial-gradient(circle at 50% 32%,#fff,#ece7da 60%,#d3ccba);
-    border:3px solid rgba(255,255,255,.7); box-shadow:0 3px 0 rgba(80,55,15,.25), inset 0 2px 4px rgba(255,255,255,.5);}
-  .tile.lit{opacity:1; border-color:#fff; background:radial-gradient(circle at 50% 32%,#fff,#ffd34d 58%,#e8a200);}
-  .tile.alt.lit{background:radial-gradient(circle at 50% 32%,#fff,#8fd0ff 58%,#3a9be8);}
-  .tile.start{opacity:1; background:radial-gradient(circle at 50% 32%,#fff,#9be06a 58%,#4e9a25);}
-  .tile.goal{opacity:1; background:radial-gradient(circle at 50% 32%,#fff,#ff8a8a 58%,#e23b3b);}
+    transform:translate(-50%,-50%); border-radius:50%; z-index:2; opacity:.55;
+    background:
+      radial-gradient(circle at 32% 24%, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 34%),
+      radial-gradient(circle at 50% 120%, rgba(0,0,0,.22) 0%, rgba(0,0,0,0) 55%),
+      radial-gradient(circle at 50% 40%, #f4efe2 0%, #ded6c2 70%, #c8bfa8 100%);
+    border:3px solid rgba(255,255,255,.8);
+    box-shadow:0 5px 0 rgba(60,40,10,.28), 0 8px 10px rgba(0,0,0,.18),
+      inset 0 3px 6px rgba(255,255,255,.8), inset 0 -5px 8px rgba(0,0,0,.15);}
+  .tile::before{content:""; position:absolute; top:8%; left:14%; width:42%; height:26%;
+    border-radius:50%; background:linear-gradient(rgba(255,255,255,.95), rgba(255,255,255,0)); pointer-events:none;}
+  .tile.lit{opacity:1; border-color:#fff;
+    background:
+      radial-gradient(circle at 32% 24%, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 36%),
+      radial-gradient(circle at 50% 120%, rgba(140,80,0,.35) 0%, rgba(0,0,0,0) 55%),
+      radial-gradient(circle at 50% 40%, #fff3b0 0%, #ffd34d 55%, #e89400 100%);}
+  .tile.alt.lit{background:
+      radial-gradient(circle at 32% 24%, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 36%),
+      radial-gradient(circle at 50% 120%, rgba(10,60,120,.4) 0%, rgba(0,0,0,0) 55%),
+      radial-gradient(circle at 50% 40%, #d9f1ff 0%, #8fd0ff 55%, #2a8ede 100%);}
+  .tile.start{opacity:1; background:
+      radial-gradient(circle at 32% 24%, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 36%),
+      radial-gradient(circle at 50% 120%, rgba(20,80,20,.4) 0%, rgba(0,0,0,0) 55%),
+      radial-gradient(circle at 50% 40%, #d6f7b8 0%, #9be06a 55%, #3f8a1f 100%);}
+  .tile.goal{opacity:1; background:
+      radial-gradient(circle at 32% 24%, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 36%),
+      radial-gradient(circle at 50% 120%, rgba(120,10,10,.4) 0%, rgba(0,0,0,0) 55%),
+      radial-gradient(circle at 50% 40%, #ffd6d6 0%, #ff8a8a 55%, #d42e2e 100%);}
   .tile.bonus::after{content:"🪙"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    font-size:clamp(14px,2.6vmin,28px); filter:drop-shadow(0 1px 1px rgba(0,0,0,.3));}
+    font-size:clamp(14px,2.6vmin,28px); filter:drop-shadow(0 1px 1px rgba(0,0,0,.3));
+    animation:coinSpin 2.2s ease-in-out infinite;}
+  @keyframes coinSpin{0%,100%{transform:scaleX(1);}50%{transform:scaleX(.12);}}
   .tile.missed{opacity:.95; border-color:#ececf0; background:radial-gradient(circle at 50% 32%,#fff,#bcbfc9 55%,#7e8290); animation:none;}
   .tile.missed::after{content:"✕"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
     font-family:"Mochiy Pop One"; color:#e23b3b; font-size:clamp(15px,2.6vmin,26px);}
+  .tile.missed::before{opacity:.35;}
   .tile .tile-icon{position:absolute; top:-1.45em; left:50%; transform:translateX(-50%); font-size:clamp(20px,3.4vmin,34px); filter:drop-shadow(0 2px 2px rgba(0,0,0,.3)); animation:wave 1.6s ease-in-out infinite;}
   .tile .tile-label{position:absolute; bottom:-1.4em; left:50%; transform:translateX(-50%); white-space:nowrap;
     font-family:"Mochiy Pop One"; font-size:clamp(9px,1.4vmin,13px); color:#fff; background:rgba(58,47,107,.7);
@@ -157,10 +205,37 @@
   @keyframes wave{0%,100%{transform:translateX(-50%) rotate(-5deg);}50%{transform:translateX(-50%) rotate(7deg);}}
   .tile.lit{animation:tileLit .42s ease forwards, glowPulse 2s ease-in-out .55s infinite;}
   @keyframes tileLit{0%{transform:translate(-50%,-50%) scale(1);}
-    45%{transform:translate(-50%,-50%) scale(1.4); box-shadow:0 0 0 7px rgba(255,255,255,.55),0 3px 0 rgba(80,55,15,.3);}
-    100%{transform:translate(-50%,-50%) scale(1.12); box-shadow:0 0 0 3px rgba(255,255,255,.75),0 3px 0 rgba(80,55,15,.3);}}
-  @keyframes glowPulse{0%,100%{box-shadow:0 0 0 3px rgba(255,255,255,.75),0 0 10px 2px rgba(255,240,160,.5),0 3px 0 rgba(80,55,15,.3);}
-    50%{box-shadow:0 0 0 3px rgba(255,255,255,.95),0 0 22px 9px rgba(255,240,160,.85),0 3px 0 rgba(80,55,15,.3);}}
+    45%{transform:translate(-50%,-50%) scale(1.4); box-shadow:0 0 0 7px rgba(255,255,255,.55),0 5px 0 rgba(60,40,10,.28),0 8px 10px rgba(0,0,0,.18);}
+    100%{transform:translate(-50%,-50%) scale(1.12); box-shadow:0 0 0 3px rgba(255,255,255,.75),0 5px 0 rgba(60,40,10,.28),0 8px 10px rgba(0,0,0,.18);}}
+  @keyframes glowPulse{0%,100%{box-shadow:0 0 0 3px rgba(255,255,255,.75),0 0 10px 2px rgba(255,240,160,.5),0 5px 0 rgba(60,40,10,.28),0 8px 10px rgba(0,0,0,.18);}
+    50%{box-shadow:0 0 0 3px rgba(255,255,255,.95),0 0 24px 10px rgba(255,240,160,.85),0 5px 0 rgba(60,40,10,.28),0 8px 10px rgba(0,0,0,.18);}}
+
+  /* 点灯した しゅんかんの 星パーティクル */
+  .spark{position:absolute; z-index:6; pointer-events:none; font-size:clamp(11px,2vmin,20px); color:#fff;
+    transform:translate(-50%,-50%); animation:sparkFly .6s ease-out forwards; text-shadow:0 0 6px rgba(255,240,150,.9);}
+  @keyframes sparkFly{0%{transform:translate(-50%,-50%) scale(.5); opacity:1;}
+    100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.1); opacity:0;}}
+
+  /* 光の玉の ながれ星のような しっぽ */
+  .trail-dot{position:absolute; width:clamp(10px,1.8vmin,18px); height:clamp(10px,1.8vmin,18px); border-radius:50%;
+    z-index:3; pointer-events:none; transform:translate(-50%,-50%);
+    background:radial-gradient(circle,#fff,#ffe98a 60%,rgba(255,217,77,0) 78%);
+    animation:trailFade .55s ease-out forwards;}
+  @keyframes trailFade{from{opacity:.8;}to{opacity:0; transform:translate(-50%,-50%) scale(.25);}}
+
+  /* とおくの 山なみ・なみ（テーマの 奥行き） */
+  .hill{position:absolute; border-radius:50%; z-index:0; pointer-events:none;}
+
+  /* ながれる くも・あわ・ながれ星 */
+  .drift-emoji{position:absolute; left:-12%; z-index:0; opacity:.55; pointer-events:none;
+    font-size:clamp(30px,5.4vmin,60px); filter:drop-shadow(0 3px 3px rgba(0,0,0,.15));
+    animation:driftX linear infinite;}
+  @keyframes driftX{to{transform:translateX(120vw);}}
+
+  /* うちゅうの またたく星 */
+  .stardot{position:absolute; width:3px; height:3px; border-radius:50%; background:#fff; z-index:0;
+    pointer-events:none; animation:twinkle 2.4s ease-in-out infinite;}
+  @keyframes twinkle{0%,100%{opacity:.15;}50%{opacity:1;}}
 
   /* ひかりの たま（道を ながれる 光） */
   .runner{position:absolute; width:clamp(22px,3.6vmin,40px); height:clamp(22px,3.6vmin,40px); border-radius:50%;
@@ -247,6 +322,9 @@
   .zb-icon{font-size:clamp(30px,5.2vmin,54px); line-height:1;}
   .zb-sub{font-size:clamp(11px,1.7vmin,17px); background:rgba(0,0,0,.22); padding:3px 14px; border-radius:999px;}
   .zb-shine{position:absolute; top:-30%; left:-25%; width:55%; height:160%; background:linear-gradient(120deg,rgba(255,255,255,.45),transparent); transform:rotate(18deg); pointer-events:none;}
+  .zure-btn::after{content:""; position:absolute; inset:10px; border:3px dashed rgba(255,255,255,.35); border-radius:20px; pointer-events:none;}
+  .zure-btn{animation:btnBreath 2.6s ease-in-out infinite;}
+  @keyframes btnBreath{0%,100%{filter:brightness(1);}50%{filter:brightness(1.09);}}
 
   .quit-btn{width:100%; background:linear-gradient(180deg,#b7add9,#8f83c0); font-size:clamp(12px,1.8vmin,17px); padding:8px; border-radius:16px;}
 
@@ -262,8 +340,9 @@
   #countdown{position:fixed; inset:0; z-index:70; display:flex; align-items:center; justify-content:center; pointer-events:none;}
   .cd-num{font-family:"Mochiy Pop One"; font-size:clamp(120px,30vmin,300px); color:var(--sun);
     -webkit-text-stroke:10px var(--ink); paint-order:stroke fill; text-shadow:0 10px 0 var(--ink);}
-  .cd-pop{animation:cdPop .8s ease both;}
-  @keyframes cdPop{0%{transform:scale(.2); opacity:0;}30%{transform:scale(1.15); opacity:1;}70%{transform:scale(1);}100%{transform:scale(1.6); opacity:0;}}
+  .cd-pop{animation:cdPop .8s cubic-bezier(.2,1.5,.4,1) both;}
+  @keyframes cdPop{0%{transform:scale(0) rotate(-360deg); opacity:0;}45%{transform:scale(1.2) rotate(8deg); opacity:1;}
+    70%{transform:scale(1) rotate(0);}100%{transform:scale(1.7); opacity:0;}}
 
   /* ================= RESULT ================= */
   #result{position:fixed; inset:0; z-index:80; display:flex; align-items:center; justify-content:center;
@@ -314,7 +393,7 @@
       <button class="tool-btn" id="muteBtnTitle" aria-label="おとを けす">🔊</button>
     </div>
     <div class="title-inner">
-      <h1 class="game-logo"><span class="logo-mushroom">👦</span> ぴったり ウォーク！</h1>
+      <h1 class="game-logo"><span class="logo-mushroom">👦</span> <span id="logoText">ぴったり ウォーク！</span></h1>
       <p class="subtitle">せんせいと いっしょに、リズムよく あるこう！</p>
       <p class="howto">🎵 メトロノームの おとに あわせて、<b>はやすぎず・おそすぎず</b> いっていの ペースで あるいてね。1ぱく ごとに すごろくの <b>マス</b> が ひとつずつ ぴかっと 点いて、さいごは ぜんぶ 点くよ。せんせいは ペースが ズレたら <b>「ズレた！」</b> を おしてね。ズレた マスは 点かないよ。</p>
       <p class="level-prompt">レベルを えらんでね</p>
@@ -427,15 +506,20 @@ var LEVELS = [
 /* ---- レベルごとの 世界観テーマ ---- */
 var THEMES = {
   1:{ bg:"linear-gradient(180deg,#cdf5ae,#7ecb4a)", ro:"#9c6b2f", rt:"#f2d391",
-      deco:["🌼","🌳","🦋","🐞","🍀","🌷"], buddy:"🐰" },
+      deco:["🌼","🌳","🦋","🐞","🍀","🌷"], buddy:"🐰",
+      hill:"rgba(72,140,50,.4)", drift:"☁️" },
   2:{ bg:"linear-gradient(180deg,#aee9ff,#3f9ad6)", ro:"#b8893a", rt:"#ffe9b0",
-      deco:["🐠","🐚","🌊","🐙","⛵","🐡"], buddy:"🐬" },
+      deco:["🐠","🐚","🌊","🐙","⛵","🐡"], buddy:"🐬",
+      hill:"rgba(20,90,150,.35)", drift:"🫧" },
   3:{ bg:"linear-gradient(180deg,#e8f5ff,#8fc3f5)", ro:"#9fb3dd", rt:"#ffffff",
-      deco:["☁️","🎈","🪁","🌤️","🕊️","🌈"], buddy:"🐦" },
+      deco:["☁️","🎈","🪁","🌤️","🕊️","🌈"], buddy:"🐦",
+      hill:"rgba(255,255,255,.45)", drift:"☁️" },
   4:{ bg:"linear-gradient(180deg,#7a4030,#3a1410)", ro:"#3c3c46", rt:"#9a9aa8",
-      deco:["🌋","🔥","🪨","💥","🦖","🌶️"], buddy:"🐲" },
+      deco:["🌋","🔥","🪨","💥","🦖","🌶️"], buddy:"🐲",
+      hill:"rgba(30,10,8,.55)", drift:"🌫️" },
   5:{ bg:"linear-gradient(180deg,#3a2a6a,#150b33)", ro:"#4a3d85", rt:"#8d7ad0",
-      deco:["🪐","⭐","🚀","🌙","👾","☄️"], buddy:"👾" }
+      deco:["🪐","⭐","🚀","🌙","👾","☄️"], buddy:"👾",
+      hill:"rgba(15,8,45,.6)", drift:"☄️", stars:true }
 };
 
 /* ============================================================
@@ -617,6 +701,7 @@ var tiles=[], tileMissed=[];
 var starsGot=0;
 var elRunner=$("runner"), elStarNum=$("starNum");
 var buddyTimer=null, buddyFaceTimer=null;
+var lastTrail=0;
 var SVGNS="http://www.w3.org/2000/svg";
 
 /* ---- 画面切替 ---- */
@@ -646,6 +731,40 @@ function buildTitle(){
   var sun = document.createElement("div");
   sun.style.cssText = "position:absolute;top:-6%;right:-3%;width:22vmin;height:22vmin;border-radius:50%;background:radial-gradient(circle at 40% 40%,#fff6c0,#ffd34d 60%,#ffb01e);box-shadow:0 0 50px rgba(255,211,77,.7);";
   deco.appendChild(sun);
+
+  // ロゴを 1もじずつ カラフルに
+  var lt = $("logoText");
+  if(lt && !lt.dataset.done){
+    var txt = lt.textContent;
+    lt.textContent = "";
+    var lcols = ["#ff5a5a","#ffc01e","#7bd14a","#5ec4ff","#a05bff","#ff8a4d","#ff6fb0"];
+    for(var ci=0; ci<txt.length; ci++){
+      var ch = txt.charAt(ci);
+      var sp = document.createElement("span");
+      if(ch === " " || ch === "　"){
+        sp.innerHTML = "&nbsp;";
+      } else {
+        sp.className = "logo-ch";
+        sp.textContent = ch;
+        sp.style.color = lcols[ci % lcols.length];
+        sp.style.animationDelay = (ci * 0.08) + "s";
+      }
+      lt.appendChild(sp);
+    }
+    lt.dataset.done = "1";
+  }
+
+  // ふわふわ うかぶ アイテム
+  var fls = [["🎲",6,58],["🪙",92,60],["⭐",3,78],["🎈",95,82]];
+  for(var fi=0; fi<fls.length; fi++){
+    var fd = document.createElement("div");
+    fd.className = "title-float";
+    fd.textContent = fls[fi][0];
+    fd.style.left = fls[fi][1] + "%";
+    fd.style.top  = fls[fi][2] + "%";
+    fd.style.animationDelay = (fi * 0.5) + "s";
+    deco.appendChild(fd);
+  }
 
   var wrap = $("levels");
   wrap.innerHTML = "";
@@ -721,9 +840,48 @@ function paintTrackMood(){
   elRoad.style.setProperty("--ro", th.ro);
   elRoad.style.setProperty("--rt", th.rt);
 
-  // 道ばたの かざり（テーマの 絵文字）
   var deco = $("trackDeco");
   deco.innerHTML = "";
+
+  // とおくの 山なみ・なみ（奥行き）
+  var hills = [[-10, 52], [28, 62], [66, 56]];
+  for(var hi=0; hi<hills.length; hi++){
+    var hd = document.createElement("div");
+    hd.className = "hill";
+    hd.style.width = hills[hi][1] + "vmin";
+    hd.style.height = hills[hi][1] + "vmin";
+    hd.style.left = hills[hi][0] + "%";
+    hd.style.bottom = (-hills[hi][1] * 0.62) + "vmin";
+    hd.style.background = th.hill;
+    deco.appendChild(hd);
+  }
+
+  // ながれる くも・あわ・ながれ星
+  var driftY = [10, 32, 55, 74, 88];
+  for(var di=0; di<driftY.length; di++){
+    var dr = document.createElement("div");
+    dr.className = "drift-emoji";
+    dr.textContent = th.drift;
+    dr.style.top = driftY[di] + "%";
+    dr.style.animationDuration = (24 + di * 7) + "s";
+    dr.style.animationDelay = (-di * 9) + "s";
+    dr.style.fontSize = (3.4 + (di % 3) * 1.2) + "vmin";
+    deco.appendChild(dr);
+  }
+
+  // うちゅうテーマの またたく星ぞら
+  if(th.stars){
+    for(var si=0; si<34; si++){
+      var st = document.createElement("div");
+      st.className = "stardot";
+      st.style.left = ((si * 37) % 97 + 1.5) + "%";
+      st.style.top  = ((si * 53) % 93 + 2) + "%";
+      st.style.animationDelay = ((si % 8) * 0.3) + "s";
+      deco.appendChild(st);
+    }
+  }
+
+  // 道ばたの かざり（テーマの 絵文字）
   var spots = [[3,8],[22,9],[68,8],[96,10],[2.5,46],[97.5,42],[8,96],[92,96],[97,72]];
   for(var i=0; i<spots.length; i++){
     var d = document.createElement("div");
@@ -792,6 +950,18 @@ function updateRunner(){
   var a = tiles[k], b = tiles[k + 1];
   elRunner.style.left = (a.x + (b.x - a.x) * frac) + "%";
   elRunner.style.top  = (a.y + (b.y - a.y) * frac) + "%";
+
+  // ながれ星のような しっぽを のこす
+  var now = performance.now();
+  if(now - lastTrail > 90){
+    lastTrail = now;
+    var td = document.createElement("div");
+    td.className = "trail-dot";
+    td.style.left = elRunner.style.left;
+    td.style.top  = elRunner.style.top;
+    elTrack.appendChild(td);
+    (function(node){ setTimeout(function(){ if(node.parentNode){ node.parentNode.removeChild(node); } }, 600); })(td);
+  }
 }
 
 /* ============================================================
@@ -861,7 +1031,7 @@ function drawRoad(){
   elRoad.setAttribute("viewBox", "0 0 " + w + " " + h);
   elRoad.setAttribute("preserveAspectRatio", "none");
   var pts = tiles.map(function(t){ return (t.x/100*w).toFixed(1) + "," + (t.y/100*h).toFixed(1); }).join(" ");
-  ["road-outline","road-top"].forEach(function(cls){
+  ["road-outline","road-top","road-ties","road-dash"].forEach(function(cls){
     var pl = document.createElementNS(SVGNS, "polyline");
     pl.setAttribute("points", pts);
     pl.setAttribute("class", cls);
@@ -878,6 +1048,7 @@ function lightTile(i){
   var tl = tiles[i];
   tl.el.classList.remove("lit"); void tl.el.offsetWidth; tl.el.classList.add("lit");
   tl.litDone = true;
+  sparkleAt(tl.x, tl.y);
   if(tl.bonus){
     starsGot++;
     elStarNum.textContent = String(starsGot);
@@ -885,6 +1056,23 @@ function lightTile(i){
     buddySay("🪙 コイン ゲット！", 1200);
   }
   if(i === tiles.length - 1){ goalCelebrate(); }
+}
+
+/* 点灯した しゅんかんに 星を ちらす */
+function sparkleAt(xp, yp){
+  for(var i=0; i<6; i++){
+    var sdiv = document.createElement("div");
+    sdiv.className = "spark";
+    sdiv.textContent = "✦";
+    var ang = Math.random() * Math.PI * 2;
+    var dist = 26 + Math.random() * 32;
+    sdiv.style.setProperty("--dx", (Math.cos(ang) * dist) + "px");
+    sdiv.style.setProperty("--dy", (Math.sin(ang) * dist) + "px");
+    sdiv.style.left = xp + "%";
+    sdiv.style.top  = yp + "%";
+    elTrack.appendChild(sdiv);
+    (function(node){ setTimeout(function(){ if(node.parentNode){ node.parentNode.removeChild(node); } }, 650); })(sdiv);
+  }
 }
 
 /* おうえん キャラ */
